@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import { connection, hyperWalletProgram } from "../lib/hyper-wallet-program";
 import * as anchor from "@coral-xyz/anchor";
+import { coinGeckoClient } from "../services";
+import { TOKEN_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
+import { getCoinGeckoId } from "../lib/utils";
+import { PublicKey } from "@solana/web3.js";
 
 export const getHyperWalletAccount = async (req: Request, res: Response) => {
   const { address } = req.query;
@@ -20,16 +24,17 @@ export const getBalanceAndTokens = async (req: Request, res: Response) => {
   if (!address) {
     return res.json({ error: "address is required" });
   }
-  const lamports = await connection.getBalance(
-    new anchor.web3.PublicKey(address)
-  );
-  res.json({
-    data: {
-      balance: {
-        lamports,
-        usd: 100,
-      },
-      tokens: [],
-    },
+  const tokenAccounts = (
+    await connection.getParsedTokenAccountsByOwner(
+      new anchor.web3.PublicKey(address),
+      {
+        programId: TOKEN_PROGRAM_ID,
+      }
+    )
+  ).value;
+  const coinGeckoIds = tokenAccounts.map((tokenAccount) => {
+    return getCoinGeckoId(tokenAccount.pubkey.toString());
   });
+  const tokenData = await coinGeckoClient.getCoinDataByIds(coinGeckoIds);
+  console.log(tokenData);
 };
