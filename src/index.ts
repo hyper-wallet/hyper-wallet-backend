@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import txRouter from "./routes/txRouter";
+import hyperWalletRouter from "./routes/hyperWalletRouter";
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/tx", txRouter);
+app.use("/hyper-wallet", hyperWalletRouter);
 
 app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
