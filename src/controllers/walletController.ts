@@ -12,8 +12,6 @@ export const getBalances = async (req: Request, res: Response) => {
     return res.json({ error: "address is required" });
   }
 
-  console.log(address);
-
   const tokenAccounts = (
     await connection.getParsedTokenAccountsByOwner(
       new anchor.web3.PublicKey(address),
@@ -22,13 +20,11 @@ export const getBalances = async (req: Request, res: Response) => {
       }
     )
   ).value;
-  console.log(tokenAccounts);
   let map = new Map();
   tokenAccounts.forEach((tokenAccount) => {
     const balance =
       tokenAccount.account.data.parsed["info"]["tokenAmount"]["amount"];
     const mint = tokenAccount.account.data.parsed["info"]["mint"];
-    console.log(getCoinGeckoId(mint));
     map.set(getCoinGeckoId(mint), {
       balance,
       mint_address: mint,
@@ -42,7 +38,6 @@ export const getBalances = async (req: Request, res: Response) => {
     decimals: 9
   });
   const coinGeckoIds = Array.from(map.keys());
-  console.log(coinGeckoIds);
   const tokenData = await coinGeckoClient.getCoinDataByIds(coinGeckoIds);
   const tokenBalances = tokenData.map((tokenData: any) => {
     return {
@@ -50,6 +45,5 @@ export const getBalances = async (req: Request, res: Response) => {
       ...map.get(tokenData.id),
     };
   });
-  console.log(tokenBalances);
   res.json({ tokenBalances });
 };

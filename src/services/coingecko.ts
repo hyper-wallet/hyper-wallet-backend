@@ -14,7 +14,6 @@ export class CoinGeckoClient {
 
   async ping() {
     const res = await this._apisauce.get("/ping");
-    console.log(res.data);
   }
 
   async getCoinDataByIds(ids: string[]): Promise<any> {
