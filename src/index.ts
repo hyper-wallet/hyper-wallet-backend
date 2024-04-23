@@ -1,7 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import txRouter from "./routes/txRouter";
 import hyperWalletRouter from "./routes/hyperWalletRouter";
 import walletRouter from "./routes/walletRouter";
 import solanaWalletRouter from "./routes/solanaWalletRouter";
