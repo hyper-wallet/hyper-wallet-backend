@@ -4,6 +4,7 @@ import cors from "cors";
 import hyperWalletRouter from "./routes/hyperWalletRouter";
 import walletRouter from "./routes/walletRouter";
 import solanaWalletRouter from "./routes/solanaWalletRouter";
+import { test } from "./sandbox";
 
 dotenv.config();
 
