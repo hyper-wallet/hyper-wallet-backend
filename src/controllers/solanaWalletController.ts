@@ -8,10 +8,7 @@ import {
   getOrCreateAssociatedTokenAccount,
 } from "@solana/spl-token";
 
-export const constructTransferLamportsTx = async (
-  req: Request,
-  res: Response
-) => {
+export async function constructTransferLamportsTx(req: Request, res: Response) {
   const { fromAddress, toAddress, lamports } = req.body;
 
   const tx = new anchor.web3.Transaction();
@@ -33,9 +30,9 @@ export const constructTransferLamportsTx = async (
   });
   const base64tx = serializedTx.toString("base64");
   res.json({ base64tx });
-};
+}
 
-export const constructTransferSplTx = async (req: Request, res: Response) => {
+export async function constructTransferSplTx(req: Request, res: Response) {
   const { fromAddress, toAddress, tokenMintAddress, rawAmount } = req.body;
 
   const fromAta = await getOrCreateAssociatedTokenAccount(
@@ -76,4 +73,47 @@ export const constructTransferSplTx = async (req: Request, res: Response) => {
   });
   const base64tx = serializedTx.toString("base64");
   res.json({ base64tx });
-};
+}
+
+export async function constructTransferNftTx(req: Request, res: Response) {
+  const { fromAddress, toAddress, nftMintAddress } = req.body;
+
+  const fromAta = await getOrCreateAssociatedTokenAccount(
+    provider.connection,
+    gasFeeSponsor,
+    new PublicKey(nftMintAddress),
+    new PublicKey(fromAddress),
+    true
+  );
+
+  const toAta = await getOrCreateAssociatedTokenAccount(
+    provider.connection,
+    gasFeeSponsor,
+    new PublicKey(nftMintAddress),
+    new PublicKey(toAddress),
+    true
+  );
+
+  const tx = new anchor.web3.Transaction();
+  tx.add(
+    createTransferCheckedInstruction(
+      fromAta.address,
+      new PublicKey(nftMintAddress),
+      toAta.address,
+      new PublicKey(fromAddress),
+      1, // Nft amount
+      0 // Nft decimals is always 0
+    )
+  );
+  tx.feePayer = gasFeeSponsor.publicKey;
+  tx.recentBlockhash = (
+    await provider.connection.getRecentBlockhash()
+  ).blockhash;
+  tx.partialSign(gasFeeSponsor);
+  const serializedTx = tx.serialize({
+    verifySignatures: true,
+    requireAllSignatures: false,
+  });
+  const base64tx = serializedTx.toString("base64");
+  res.json({ base64tx });
+}

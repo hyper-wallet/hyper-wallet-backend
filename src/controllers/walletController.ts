@@ -13,7 +13,7 @@ import {
 import { umi } from "../lib/umi";
 import { publicKey, unwrapOption } from "@metaplex-foundation/umi";
 
-export const getBalances = async (req: Request, res: Response) => {
+export async function getBalances(req: Request, res: Response) {
   const { address } = req.query;
   if (!address) {
     return res.json({ error: "address is required" });
@@ -53,7 +53,7 @@ export const getBalances = async (req: Request, res: Response) => {
     };
   });
   res.json({ tokenBalances });
-};
+}
 
 export async function getFungibleAssetsByOwner(req: Request, res: Response) {
   const { address } = req.params;
@@ -108,6 +108,7 @@ export async function getNonFungibleAssetsByOwner(req: Request, res: Response) {
   if (!address) {
     return res.json({ error: "Address is required" });
   }
+
   const nonFungibleAssets = (
     await fetchAllDigitalAssetByOwner(umi, publicKey(address.toString()))
   )
@@ -133,6 +134,7 @@ export async function getNonFungibleAssetsByOwner(req: Request, res: Response) {
         },
       };
     });
+
   const nonFungibleAssetsWithJsonMetadata = await Promise.all(
     nonFungibleAssets.map(async (asset) => {
       const { mint, metadata } = asset;
