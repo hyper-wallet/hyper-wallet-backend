@@ -5,13 +5,18 @@ import {
   constructHyperTransferSplTx,
   getBalanceAndTokens,
   getHyperWalletAccount,
+  getHyperWalletTransactions,
 } from "../controllers/hyperWalletController";
 
-const txRouter = express.Router();
+const hyperWalletRouter = express.Router();
 
-txRouter.get("/", getHyperWalletAccount);
-txRouter.get("/balance-tokens", getBalanceAndTokens);
-txRouter.post("/tx/transfer-lamports", constructHyperTransferLamportsTx);
-txRouter.post("/tx/transfer-spl", constructHyperTransferSplTx);
+hyperWalletRouter.get("/", getHyperWalletAccount);
+hyperWalletRouter.get("/balance-tokens", getBalanceAndTokens);
+hyperWalletRouter.post(
+  "/tx/transfer-lamports",
+  constructHyperTransferLamportsTx
+);
+hyperWalletRouter.post("/tx/transfer-spl", constructHyperTransferSplTx);
+hyperWalletRouter.get("/transactions", getHyperWalletTransactions);
 
-export default txRouter;
+export default hyperWalletRouter;

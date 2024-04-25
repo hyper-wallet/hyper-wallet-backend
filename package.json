@@ -11,6 +11,8 @@
   "dependencies": {
     "@coral-xyz/anchor": "0.29.0",
     "@solana/spl-token": "^0.4.6",
+    "@solanafm/explorer-kit": "^1.0.5",
+    "@solanafm/explorer-kit-idls": "^1.0.4",
     "@types/express": "^4.17.21",
     "@types/node": "^20.12.7",
     "apisauce": "^3.0.1",

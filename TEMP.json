@@ -1,0 +1,931 @@
+{
+  "entries": [
+    {
+      "category": {
+        "title": "Generic Transaction",
+        "icon": "generic"
+      },
+      "icon": {
+        "type": "default"
+      },
+      "title": "`G2EQQ…CbCr4`",
+      "subtitle": "Success",
+      "value": null,
+      "sub_value": null,
+      "detail_subtitle": {
+        "text": "Success",
+        "type": "text"
+      },
+      "detail_blocks": [
+        {
+          "type": "sol",
+          "amount": {
+            "lamports": "5000"
+          },
+          "subtitle": "SOL",
+          "mode": "negative"
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "generic",
+          "icon": {
+            "type": "default"
+          },
+          "left": {
+            "title": "`noteD…3PT93`",
+            "description": "App Interaction"
+          }
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "generic",
+          "icon": {
+            "type": "default"
+          },
+          "left": {
+            "title": "`Token…VQ5DA`",
+            "description": "App Interaction"
+          }
+        }
+      ],
+      "api_id": "G2EQQ9zWYTKSx3AG1mzvo3V36cmUwm1DuUR99VdKGW5RNLPKEuMDjsBa1otKCbdUQyxy6qRX9hoaoiY4NSCbCr4",
+      "fee": {
+        "lamports": "5000"
+      },
+      "note": "",
+      "signature": "G2EQQ9zWYTKSx3AG1mzvo3V36cmUwm1DuUR99VdKGW5RNLPKEuMDjsBa1otKCbdUQyxy6qRX9hoaoiY4NSCbCr4",
+      "timestamp": "2023-09-17T13:51:56.000Z",
+      "sol_exchange_rate": {
+        "price_usd": "19.009443287428397",
+        "volume_24h_usd": "109761745.93000",
+        "market_cap_usd": "7817944891.84870",
+        "price_percent_change_24h": "0.37"
+      },
+      "token_to_exchange_rate": {
+        "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB": {
+          "price_usd": "1.000635622108484",
+          "volume_24h_usd": "12089256927.40000",
+          "market_cap_usd": "83094706818.19032",
+          "price_percent_change_24h": "0.04"
+        }
+      },
+      "is_viewer_involved": false
+    },
+    {
+      "category": {
+        "title": "Received",
+        "icon": "receive"
+      },
+      "icon": {
+        "type": "solana"
+      },
+      "title": "Solana",
+      "subtitle": "From haiduc.glow",
+      "detail_subtitle": {
+        "type": "sol-amount",
+        "amount": {
+          "lamports": "100000000"
+        }
+      },
+      "detail_blocks": [
+        {
+          "type": "address",
+          "address": "2dcehmCM23TcGgBmeHjGBcGYuQX26UgBKPx4CN4BhP47",
+          "address_eyebrow": "From",
+          "right": {
+            "title": "0.23591 SOL",
+            "description": "Pre-Balance",
+            "title_placement": "bottom"
+          }
+        },
+        {
+          "type": "chevron"
+        },
+        {
+          "type": "address",
+          "address": "2dcehmCM23TcGgBmeHjGBcGYuQX26UgBKPx4CN4BhP47",
+          "address_eyebrow": "To",
+          "right": {
+            "title": "0.23591 SOL",
+            "description": "Pre-Balance",
+            "title_placement": "bottom"
+          }
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "sol",
+          "amount": {
+            "lamports": "100000000"
+          },
+          "subtitle": "SOL",
+          "mode": "positive"
+        },
+        {
+          "type": "simple",
+          "icon": "dollar",
+          "title": "Price per SOL",
+          "right": {
+            "type": "text",
+            "text": "$19.01"
+          }
+        }
+      ],
+      "value": {
+        "mode": "positive",
+        "type": "solana",
+        "amount": {
+          "lamports": "100000000"
+        }
+      },
+      "sub_value": "$1.90",
+      "api_id": "2EU2Q6Gfv5UB9oX8RSn8XCL86j8mEu6jfCjVAjdC5as2U6GGYVpW1Vfe1kGKwH1yCa3KXcJUHEc9TB2jUHB5MBiq",
+      "fee": {
+        "lamports": "5000"
+      },
+      "note": "",
+      "signature": "2EU2Q6Gfv5UB9oX8RSn8XCL86j8mEu6jfCjVAjdC5as2U6GGYVpW1Vfe1kGKwH1yCa3KXcJUHEc9TB2jUHB5MBiq",
+      "timestamp": "2023-09-17T13:51:19.000Z",
+      "sol_exchange_rate": {
+        "price_usd": "19.009443287428397",
+        "volume_24h_usd": "109761745.93000",
+        "market_cap_usd": "7817944891.84870",
+        "price_percent_change_24h": "0.37"
+      },
+      "token_to_exchange_rate": {},
+      "is_viewer_involved": false
+    },
+    {
+      "category": {
+        "title": "Received",
+        "icon": "receive"
+      },
+      "icon": {
+        "type": "solana"
+      },
+      "title": "Solana",
+      "subtitle": "From haiduc.glow",
+      "detail_subtitle": {
+        "type": "sol-amount",
+        "amount": {
+          "lamports": "100000000"
+        }
+      },
+      "detail_blocks": [
+        {
+          "type": "address",
+          "address": "2dcehmCM23TcGgBmeHjGBcGYuQX26UgBKPx4CN4BhP47",
+          "address_eyebrow": "From",
+          "right": {
+            "title": "0.23591 SOL",
+            "description": "Pre-Balance",
+            "title_placement": "bottom"
+          }
+        },
+        {
+          "type": "chevron"
+        },
+        {
+          "type": "address",
+          "address": "2dcehmCM23TcGgBmeHjGBcGYuQX26UgBKPx4CN4BhP47",
+          "address_eyebrow": "To",
+          "right": {
+            "title": "0.23591 SOL",
+            "description": "Pre-Balance",
+            "title_placement": "bottom"
+          }
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "sol",
+          "amount": {
+            "lamports": "100000000"
+          },
+          "subtitle": "SOL",
+          "mode": "positive"
+        },
+        {
+          "type": "simple",
+          "icon": "dollar",
+          "title": "Price per SOL",
+          "right": {
+            "type": "text",
+            "text": "$19.03"
+          }
+        }
+      ],
+      "value": {
+        "mode": "positive",
+        "type": "solana",
+        "amount": {
+          "lamports": "100000000"
+        }
+      },
+      "sub_value": "$1.90",
+      "api_id": "5f2fL6YNtp8K4ke1d6bTccUuSfo6JXwks4pnRLZ1NPWZ5MfJvCvyz1wN5NQ89jm8atG2KoY3txQYMmvunhABv4MC",
+      "fee": {
+        "lamports": "5000"
+      },
+      "note": "",
+      "signature": "5f2fL6YNtp8K4ke1d6bTccUuSfo6JXwks4pnRLZ1NPWZ5MfJvCvyz1wN5NQ89jm8atG2KoY3txQYMmvunhABv4MC",
+      "timestamp": "2023-09-17T13:20:54.000Z",
+      "sol_exchange_rate": {
+        "price_usd": "19.033183161239048",
+        "volume_24h_usd": "112895621.53000",
+        "market_cap_usd": "7827708303.76901",
+        "price_percent_change_24h": "0.06"
+      },
+      "token_to_exchange_rate": {},
+      "is_viewer_involved": false
+    },
+    {
+      "category": {
+        "title": "Generic Transaction",
+        "icon": "generic"
+      },
+      "icon": {
+        "type": "default"
+      },
+      "title": "`584ma…AddZa`",
+      "subtitle": "Success",
+      "value": null,
+      "sub_value": null,
+      "detail_subtitle": {
+        "text": "Success",
+        "type": "text"
+      },
+      "detail_blocks": [
+        {
+          "type": "sol",
+          "amount": {
+            "lamports": "5000"
+          },
+          "subtitle": "SOL",
+          "mode": "negative"
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "generic",
+          "icon": {
+            "type": "default"
+          },
+          "left": {
+            "title": "`noteD…3PT93`",
+            "description": "App Interaction"
+          }
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "generic",
+          "icon": {
+            "type": "default"
+          },
+          "left": {
+            "title": "`Token…VQ5DA`",
+            "description": "App Interaction"
+          }
+        }
+      ],
+      "api_id": "584maVMeJn7ArcyrWQTupAbBUYaSpPFBLCPkYxs5GCCD7nVKbqsC26K9dDt5C1YmjZcAiCWMDeuNTdbTrRkAddZa",
+      "fee": {
+        "lamports": "5000"
+      },
+      "note": "",
+      "signature": "584maVMeJn7ArcyrWQTupAbBUYaSpPFBLCPkYxs5GCCD7nVKbqsC26K9dDt5C1YmjZcAiCWMDeuNTdbTrRkAddZa",
+      "timestamp": "2023-09-17T13:12:45.000Z",
+      "sol_exchange_rate": {
+        "price_usd": "19.031966524479504",
+        "volume_24h_usd": "114306043.58000",
+        "market_cap_usd": "7827207941.97537",
+        "price_percent_change_24h": "-0.18"
+      },
+      "token_to_exchange_rate": {
+        "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB": {
+          "price_usd": "1.000427916118044",
+          "volume_24h_usd": "12146252986.50000",
+          "market_cap_usd": "83077458513.21431",
+          "price_percent_change_24h": "0.01"
+        }
+      },
+      "is_viewer_involved": false
+    },
+    {
+      "category": {
+        "title": "Generic Transaction",
+        "icon": "generic"
+      },
+      "icon": {
+        "type": "default"
+      },
+      "title": "`y6yPU…Ukf8k`",
+      "subtitle": "Success",
+      "value": null,
+      "sub_value": null,
+      "detail_subtitle": {
+        "text": "Success",
+        "type": "text"
+      },
+      "detail_blocks": [
+        {
+          "type": "sol",
+          "amount": {
+            "lamports": "5000"
+          },
+          "subtitle": "SOL",
+          "mode": "negative"
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "generic",
+          "icon": {
+            "type": "default"
+          },
+          "left": {
+            "title": "`noteD…3PT93`",
+            "description": "App Interaction"
+          }
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "generic",
+          "icon": {
+            "type": "default"
+          },
+          "left": {
+            "title": "`Token…VQ5DA`",
+            "description": "App Interaction"
+          }
+        }
+      ],
+      "api_id": "y6yPUpyG9cKBUxvCMidVW9AH4B4xKAaPQKVA3ykmQ3NJVWywXC9guN2Vr33g5EhFv8UKBLqcsmTAqkv4M1Ukf8k",
+      "fee": {
+        "lamports": "5000"
+      },
+      "note": "",
+      "signature": "y6yPUpyG9cKBUxvCMidVW9AH4B4xKAaPQKVA3ykmQ3NJVWywXC9guN2Vr33g5EhFv8UKBLqcsmTAqkv4M1Ukf8k",
+      "timestamp": "2023-09-17T13:11:50.000Z",
+      "sol_exchange_rate": {
+        "price_usd": "19.031966524479504",
+        "volume_24h_usd": "114306043.58000",
+        "market_cap_usd": "7827207941.97537",
+        "price_percent_change_24h": "-0.18"
+      },
+      "token_to_exchange_rate": {
+        "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB": {
+          "price_usd": "1.000427916118044",
+          "volume_24h_usd": "12146252986.50000",
+          "market_cap_usd": "83077458513.21431",
+          "price_percent_change_24h": "0.01"
+        }
+      },
+      "is_viewer_involved": false
+    },
+    {
+      "category": {
+        "title": "Generic Transaction",
+        "icon": "generic"
+      },
+      "icon": {
+        "type": "default"
+      },
+      "title": "`2cT6Z…XWwgQ`",
+      "subtitle": "Success",
+      "value": null,
+      "sub_value": null,
+      "detail_subtitle": {
+        "text": "Success",
+        "type": "text"
+      },
+      "detail_blocks": [
+        {
+          "type": "sol",
+          "amount": {
+            "lamports": "5000"
+          },
+          "subtitle": "SOL",
+          "mode": "negative"
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "generic",
+          "icon": {
+            "type": "default"
+          },
+          "left": {
+            "title": "`noteD…3PT93`",
+            "description": "App Interaction"
+          }
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "generic",
+          "icon": {
+            "type": "default"
+          },
+          "left": {
+            "title": "`Token…VQ5DA`",
+            "description": "App Interaction"
+          }
+        }
+      ],
+      "api_id": "2cT6Zc3DEH2ZzQ1cWyYxiGnYAMvTxX58YZjRQRgXQ4f2dKSpbRqkwJdgEPD4n535pCZjGoZVryv8QVNn7ELXWwgQ",
+      "fee": {
+        "lamports": "5000"
+      },
+      "note": "",
+      "signature": "2cT6Zc3DEH2ZzQ1cWyYxiGnYAMvTxX58YZjRQRgXQ4f2dKSpbRqkwJdgEPD4n535pCZjGoZVryv8QVNn7ELXWwgQ",
+      "timestamp": "2023-09-17T13:09:27.000Z",
+      "sol_exchange_rate": {
+        "price_usd": "19.045012592209645",
+        "volume_24h_usd": "115184914.22000",
+        "market_cap_usd": "7832573351.00010",
+        "price_percent_change_24h": "-0.56"
+      },
+      "token_to_exchange_rate": {
+        "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB": {
+          "price_usd": "1.000605910201552",
+          "volume_24h_usd": "12153898604.80000",
+          "market_cap_usd": "83092239484.28679",
+          "price_percent_change_24h": "0.03"
+        }
+      },
+      "is_viewer_involved": false
+    },
+    {
+      "category": {
+        "title": "Generic Transaction",
+        "icon": "generic"
+      },
+      "icon": {
+        "type": "default"
+      },
+      "title": "`3MkR2…X1Zfg`",
+      "subtitle": "Success",
+      "value": null,
+      "sub_value": null,
+      "detail_subtitle": {
+        "text": "Success",
+        "type": "text"
+      },
+      "detail_blocks": [
+        {
+          "type": "sol",
+          "amount": {
+            "lamports": "5000"
+          },
+          "subtitle": "SOL",
+          "mode": "negative"
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "generic",
+          "icon": {
+            "type": "default"
+          },
+          "left": {
+            "title": "`Token…VQ5DA`",
+            "description": "App Interaction"
+          }
+        }
+      ],
+      "api_id": "3MkR2Gz5iiygY2HKJzjvKgjn8mpdK3WKph9vPp1DhPHYhzVLEY3T69Af9ixsV9TRLEf8HH8Pifhb6nM7MiJX1Zfg",
+      "fee": {
+        "lamports": "5000"
+      },
+      "note": null,
+      "signature": "3MkR2Gz5iiygY2HKJzjvKgjn8mpdK3WKph9vPp1DhPHYhzVLEY3T69Af9ixsV9TRLEf8HH8Pifhb6nM7MiJX1Zfg",
+      "timestamp": "2023-09-17T12:57:01.000Z",
+      "sol_exchange_rate": {
+        "price_usd": "19.064974176929947",
+        "volume_24h_usd": "116808113.17000",
+        "market_cap_usd": "7840782879.65056",
+        "price_percent_change_24h": "-0.54"
+      },
+      "token_to_exchange_rate": {
+        "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB": {
+          "price_usd": "1.000435103599849",
+          "volume_24h_usd": "12167269637.96000",
+          "market_cap_usd": "83078055375.52878",
+          "price_percent_change_24h": "0.01"
+        }
+      },
+      "is_viewer_involved": false
+    },
+    {
+      "category": {
+        "title": "Generic Transaction",
+        "icon": "generic"
+      },
+      "icon": {
+        "type": "default"
+      },
+      "title": "`Vq7Us…qoA8X`",
+      "subtitle": "Success",
+      "value": null,
+      "sub_value": null,
+      "detail_subtitle": {
+        "text": "Success",
+        "type": "text"
+      },
+      "detail_blocks": [
+        {
+          "type": "sol",
+          "amount": {
+            "lamports": "5000"
+          },
+          "subtitle": "SOL",
+          "mode": "negative"
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "generic",
+          "icon": {
+            "type": "default"
+          },
+          "left": {
+            "title": "`noteD…3PT93`",
+            "description": "App Interaction"
+          }
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "generic",
+          "icon": {
+            "type": "default"
+          },
+          "left": {
+            "title": "`Token…VQ5DA`",
+            "description": "App Interaction"
+          }
+        }
+      ],
+      "api_id": "Vq7UsStbafn7pdGyaY2CN3MkTvQRjH6UJBgK6vdKaeG18YjBRihDT5W8QmSvsRuMhdxzY6g2ihD2QywAvnqoA8X",
+      "fee": {
+        "lamports": "5000"
+      },
+      "note": "",
+      "signature": "Vq7UsStbafn7pdGyaY2CN3MkTvQRjH6UJBgK6vdKaeG18YjBRihDT5W8QmSvsRuMhdxzY6g2ihD2QywAvnqoA8X",
+      "timestamp": "2023-09-17T12:48:55.000Z",
+      "sol_exchange_rate": {
+        "price_usd": "19.068092784615850",
+        "volume_24h_usd": "116873493.71000",
+        "market_cap_usd": "7842065458.13847",
+        "price_percent_change_24h": "-0.57"
+      },
+      "token_to_exchange_rate": {
+        "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB": {
+          "price_usd": "1.000417632046322",
+          "volume_24h_usd": "12175798345.82000",
+          "market_cap_usd": "83076604504.11674",
+          "price_percent_change_24h": "0.03"
+        }
+      },
+      "is_viewer_involved": false
+    },
+    {
+      "title": "Genesis: degen.glow",
+      "subtitle": "From haiduc.glow",
+      "category": {
+        "title": "Received",
+        "icon": "receive"
+      },
+      "icon": {
+        "type": "nft",
+        "nft": {
+          "address": "DXNdVqemUdeYxxPTuLYgrSnKTG8XCSKGiUTiehXP4s59",
+          "holder": "2dcehmCM23TcGgBmeHjGBcGYuQX26UgBKPx4CN4BhP47",
+          "authority": "au19QGSfERnBsa9ep6y29PFgNhVLaeSKiCdETotMnm1",
+          "authority_can_update": true,
+          "network": "mainnet",
+          "metadata_url": "https://cdn.glow.app/g/gr/43k8x5x6vi.json",
+          "collection": "3UnwBdsJixwEnEje5ZaQpwM6Yc3R9vJautwJ2P9gKmog",
+          "is_frozen": false,
+          "delegate": null,
+          "name": "Genesis: degen.glow",
+          "description": null,
+          "image": "https://cdn.glow.app/g/nq/da9ccdaf-3c0f-4565-8a27-eb35f594dd09.png",
+          "traits": [
+            {
+              "value": "2022-10-13T12:25:33.097Z",
+              "trait_type": "Minted At"
+            },
+            {
+              "value": "7Hsq7dFbKT42HPSFvgSh4y2cHwahatgkz6NSKAqsa9Wz",
+              "trait_type": "Minted By"
+            },
+            {
+              "value": "degen",
+              "trait_type": "Glow ID"
+            }
+          ],
+          "minted_at": null,
+          "animation_url": null,
+          "external_url": null,
+          "badge_image_url": null,
+          "collection_name": "Genesis: degen.glow",
+          "$kind": null,
+          "api_id": "DXNdVqemUdeYxxPTuLYgrSnKTG8XCSKGiUTiehXP4s59",
+          "standard": "nftoken",
+          "creators": [],
+          "files": [],
+          "marketplace": null,
+          "mint_address": "DXNdVqemUdeYxxPTuLYgrSnKTG8XCSKGiUTiehXP4s59",
+          "price": null,
+          "solana_nft_collection_api_id": null,
+          "supply": "1",
+          "symbol": "",
+          "type": "nft",
+          "uri": "https://cdn.glow.app/g/gr/43k8x5x6vi.json",
+          "decimals": 0,
+          "special_type": "glow-id-genesis",
+          "collection_address": "3UnwBdsJixwEnEje5ZaQpwM6Yc3R9vJautwJ2P9gKmog"
+        }
+      },
+      "value": null,
+      "sub_value": null,
+      "detail_subtitle": {
+        "text": "Genesis: degen.glow",
+        "type": "text"
+      },
+      "detail_blocks": [
+        {
+          "type": "address",
+          "address": "2dcehmCM23TcGgBmeHjGBcGYuQX26UgBKPx4CN4BhP47",
+          "address_eyebrow": "From"
+        },
+        {
+          "type": "chevron"
+        },
+        {
+          "type": "address",
+          "address": "2dcehmCM23TcGgBmeHjGBcGYuQX26UgBKPx4CN4BhP47",
+          "address_eyebrow": "To"
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "nft",
+          "nft": {
+            "address": "DXNdVqemUdeYxxPTuLYgrSnKTG8XCSKGiUTiehXP4s59",
+            "holder": "2dcehmCM23TcGgBmeHjGBcGYuQX26UgBKPx4CN4BhP47",
+            "authority": "au19QGSfERnBsa9ep6y29PFgNhVLaeSKiCdETotMnm1",
+            "authority_can_update": true,
+            "network": "mainnet",
+            "metadata_url": "https://cdn.glow.app/g/gr/43k8x5x6vi.json",
+            "collection": "3UnwBdsJixwEnEje5ZaQpwM6Yc3R9vJautwJ2P9gKmog",
+            "is_frozen": false,
+            "delegate": null,
+            "name": "Genesis: degen.glow",
+            "description": null,
+            "image": "https://cdn.glow.app/g/nq/da9ccdaf-3c0f-4565-8a27-eb35f594dd09.png",
+            "traits": [
+              {
+                "value": "2022-10-13T12:25:33.097Z",
+                "trait_type": "Minted At"
+              },
+              {
+                "value": "7Hsq7dFbKT42HPSFvgSh4y2cHwahatgkz6NSKAqsa9Wz",
+                "trait_type": "Minted By"
+              },
+              {
+                "value": "degen",
+                "trait_type": "Glow ID"
+              }
+            ],
+            "minted_at": null,
+            "animation_url": null,
+            "external_url": null,
+            "badge_image_url": null,
+            "collection_name": "Genesis: degen.glow",
+            "$kind": null,
+            "api_id": "DXNdVqemUdeYxxPTuLYgrSnKTG8XCSKGiUTiehXP4s59",
+            "standard": "nftoken",
+            "creators": [],
+            "files": [],
+            "marketplace": null,
+            "mint_address": "DXNdVqemUdeYxxPTuLYgrSnKTG8XCSKGiUTiehXP4s59",
+            "price": null,
+            "solana_nft_collection_api_id": null,
+            "supply": "1",
+            "symbol": "",
+            "type": "nft",
+            "uri": "https://cdn.glow.app/g/gr/43k8x5x6vi.json",
+            "decimals": 0,
+            "special_type": "glow-id-genesis",
+            "collection_address": "3UnwBdsJixwEnEje5ZaQpwM6Yc3R9vJautwJ2P9gKmog"
+          }
+        }
+      ],
+      "api_id": "4wi6hZX4R2QXC1qMecHY9jgmqNdv8gRYUTz3Ecq6nS5Jki9a81t2aEkM4AwGRowNoZzadiXkLZH97amZHXgL3iDd",
+      "fee": {
+        "lamports": "5000"
+      },
+      "note": null,
+      "signature": "4wi6hZX4R2QXC1qMecHY9jgmqNdv8gRYUTz3Ecq6nS5Jki9a81t2aEkM4AwGRowNoZzadiXkLZH97amZHXgL3iDd",
+      "timestamp": "2023-09-17T12:39:58.000Z",
+      "sol_exchange_rate": {
+        "price_usd": "19.080522237345477",
+        "volume_24h_usd": "116934129.56000",
+        "market_cap_usd": "7847177274.14522",
+        "price_percent_change_24h": "-0.35"
+      },
+      "token_to_exchange_rate": {},
+      "is_viewer_involved": false
+    },
+    {
+      "title": "Genesis: degen.glow",
+      "subtitle": "From haiduc.glow",
+      "category": {
+        "title": "Received",
+        "icon": "receive"
+      },
+      "icon": {
+        "type": "nft",
+        "nft": {
+          "address": "DXNdVqemUdeYxxPTuLYgrSnKTG8XCSKGiUTiehXP4s59",
+          "holder": "2dcehmCM23TcGgBmeHjGBcGYuQX26UgBKPx4CN4BhP47",
+          "authority": "au19QGSfERnBsa9ep6y29PFgNhVLaeSKiCdETotMnm1",
+          "authority_can_update": true,
+          "network": "mainnet",
+          "metadata_url": "https://cdn.glow.app/g/gr/43k8x5x6vi.json",
+          "collection": "3UnwBdsJixwEnEje5ZaQpwM6Yc3R9vJautwJ2P9gKmog",
+          "is_frozen": false,
+          "delegate": null,
+          "name": "Genesis: degen.glow",
+          "description": null,
+          "image": "https://cdn.glow.app/g/nq/da9ccdaf-3c0f-4565-8a27-eb35f594dd09.png",
+          "traits": [
+            {
+              "value": "2022-10-13T12:25:33.097Z",
+              "trait_type": "Minted At"
+            },
+            {
+              "value": "7Hsq7dFbKT42HPSFvgSh4y2cHwahatgkz6NSKAqsa9Wz",
+              "trait_type": "Minted By"
+            },
+            {
+              "value": "degen",
+              "trait_type": "Glow ID"
+            }
+          ],
+          "minted_at": null,
+          "animation_url": null,
+          "external_url": null,
+          "badge_image_url": null,
+          "collection_name": "Genesis: degen.glow",
+          "$kind": null,
+          "api_id": "DXNdVqemUdeYxxPTuLYgrSnKTG8XCSKGiUTiehXP4s59",
+          "standard": "nftoken",
+          "creators": [],
+          "files": [],
+          "marketplace": null,
+          "mint_address": "DXNdVqemUdeYxxPTuLYgrSnKTG8XCSKGiUTiehXP4s59",
+          "price": null,
+          "solana_nft_collection_api_id": null,
+          "supply": "1",
+          "symbol": "",
+          "type": "nft",
+          "uri": "https://cdn.glow.app/g/gr/43k8x5x6vi.json",
+          "decimals": 0,
+          "special_type": "glow-id-genesis",
+          "collection_address": "3UnwBdsJixwEnEje5ZaQpwM6Yc3R9vJautwJ2P9gKmog"
+        }
+      },
+      "value": null,
+      "sub_value": null,
+      "detail_subtitle": {
+        "text": "Genesis: degen.glow",
+        "type": "text"
+      },
+      "detail_blocks": [
+        {
+          "type": "address",
+          "address": "2dcehmCM23TcGgBmeHjGBcGYuQX26UgBKPx4CN4BhP47",
+          "address_eyebrow": "From"
+        },
+        {
+          "type": "chevron"
+        },
+        {
+          "type": "address",
+          "address": "2dcehmCM23TcGgBmeHjGBcGYuQX26UgBKPx4CN4BhP47",
+          "address_eyebrow": "To"
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "nft",
+          "nft": {
+            "address": "DXNdVqemUdeYxxPTuLYgrSnKTG8XCSKGiUTiehXP4s59",
+            "holder": "2dcehmCM23TcGgBmeHjGBcGYuQX26UgBKPx4CN4BhP47",
+            "authority": "au19QGSfERnBsa9ep6y29PFgNhVLaeSKiCdETotMnm1",
+            "authority_can_update": true,
+            "network": "mainnet",
+            "metadata_url": "https://cdn.glow.app/g/gr/43k8x5x6vi.json",
+            "collection": "3UnwBdsJixwEnEje5ZaQpwM6Yc3R9vJautwJ2P9gKmog",
+            "is_frozen": false,
+            "delegate": null,
+            "name": "Genesis: degen.glow",
+            "description": null,
+            "image": "https://cdn.glow.app/g/nq/da9ccdaf-3c0f-4565-8a27-eb35f594dd09.png",
+            "traits": [
+              {
+                "value": "2022-10-13T12:25:33.097Z",
+                "trait_type": "Minted At"
+              },
+              {
+                "value": "7Hsq7dFbKT42HPSFvgSh4y2cHwahatgkz6NSKAqsa9Wz",
+                "trait_type": "Minted By"
+              },
+              {
+                "value": "degen",
+                "trait_type": "Glow ID"
+              }
+            ],
+            "minted_at": null,
+            "animation_url": null,
+            "external_url": null,
+            "badge_image_url": null,
+            "collection_name": "Genesis: degen.glow",
+            "$kind": null,
+            "api_id": "DXNdVqemUdeYxxPTuLYgrSnKTG8XCSKGiUTiehXP4s59",
+            "standard": "nftoken",
+            "creators": [],
+            "files": [],
+            "marketplace": null,
+            "mint_address": "DXNdVqemUdeYxxPTuLYgrSnKTG8XCSKGiUTiehXP4s59",
+            "price": null,
+            "solana_nft_collection_api_id": null,
+            "supply": "1",
+            "symbol": "",
+            "type": "nft",
+            "uri": "https://cdn.glow.app/g/gr/43k8x5x6vi.json",
+            "decimals": 0,
+            "special_type": "glow-id-genesis",
+            "collection_address": "3UnwBdsJixwEnEje5ZaQpwM6Yc3R9vJautwJ2P9gKmog"
+          }
+        }
+      ],
+      "api_id": "4W4hj2GnLWKT7rVSQQUgVTGwbeoCgeSTdXudUN8jmfVxrHxrEpJsS3QX4DF2JWPDDnrmFeHWncZx2Ja2Ej9FcAVT",
+      "fee": {
+        "lamports": "5000"
+      },
+      "note": null,
+      "signature": "4W4hj2GnLWKT7rVSQQUgVTGwbeoCgeSTdXudUN8jmfVxrHxrEpJsS3QX4DF2JWPDDnrmFeHWncZx2Ja2Ej9FcAVT",
+      "timestamp": "2023-09-17T09:58:29.000Z",
+      "sol_exchange_rate": {
+        "price_usd": "19.038725214509988",
+        "volume_24h_usd": "118539045.28000",
+        "market_cap_usd": "7829990793.86511",
+        "price_percent_change_24h": "-0.74"
+      },
+      "token_to_exchange_rate": {},
+      "is_viewer_involved": false
+    }
+  ],
+  "has_more": true,
+  "next_cursor": "4W4hj2GnLWKT7rVSQQUgVTGwbeoCgeSTdXudUN8jmfVxrHxrEpJsS3QX4DF2JWPDDnrmFeHWncZx2Ja2Ej9FcAVT",
+  "glow_id_dict": {
+    "2dcehmCM23TcGgBmeHjGBcGYuQX26UgBKPx4CN4BhP47": {
+      "resolved": "2dcehmCM23TcGgBmeHjGBcGYuQX26UgBKPx4CN4BhP47",
+      "handle": "haiduc",
+      "metadata_url": "https://cdn.glow.app/g/24/fiy85pg8yc.json",
+      "joined_at": "2022-10-30T14:12:34.000Z",
+      "collection": "3pHhrTdUM2HvDG9yFahgDVgaXFQfnDa4jReL3FjUPbPV",
+      "id_card_image_url": "https://cdn.glow.app/g/69/772a35e8-bb65-485f-a13e-67aa57859dcd.png",
+      "twitter": null,
+      "invited_by_handle": "degen",
+      "url": "https://cdn.glow.app/g/24/fiy85pg8yc.json",
+      "name": "Hai Duc",
+      "image": "https://cdn.glow.app/g/7a/9a692ea6-5ae7-4cda-97b6-885f2a6fccf8",
+      "bio": ""
+    }
+  }
+}
