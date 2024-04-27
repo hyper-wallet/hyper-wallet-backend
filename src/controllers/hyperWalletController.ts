@@ -11,7 +11,6 @@ import { getCoinGeckoId } from "../lib/utils";
 import { gasFeeSponsor } from "../lib/gas-fee-sponsor";
 import { getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
-import { getParsedTransaction } from "../lib/transaction-parser";
 
 export async function getHyperWalletAccount(req: Request, res: Response) {
   const { address } = req.query;
@@ -148,25 +147,4 @@ export async function constructHyperTransferNftTx(req: Request, res: Response) {
   });
   const base64tx = serializedTx.toString("base64");
   res.json({ base64tx });
-}
-
-export async function getHyperWalletTransactions(req: Request, res: Response) {
-  const { address } = req.query;
-  if (!address) {
-    return res.json({ error: "address is required" });
-  }
-
-  const signatures = await connection.getSignaturesForAddress(
-    new PublicKey("Csg6zEgfihsi25RuJkd9M2YjENzLiYya34ZfQmr9fScb"),
-    { limit: 10 }
-  );
-  console.log("🚀 ~ signatures:", signatures.length);
-
-  const promises = signatures.map(({ signature }) =>
-    getParsedTransaction(signature)
-  );
-
-  const parsedTransactions = (await Promise.all(promises)).filter((a) => !!a);
-
-  res.json({ parsedTransactions });
 }

@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@coral-xyz/anchor": "0.29.0",
+    "@debridge-finance/solana-transaction-parser": "^2.0.1",
     "@metaplex-foundation/digital-asset-standard-api": "^1.0.3",
     "@metaplex-foundation/mpl-token-metadata": "^3.2.1",
     "@metaplex-foundation/umi": "^0.9.1",
     "@metaplex-foundation/umi-bundle-defaults": "^0.9.1",
+    "@shyft-to/js": "^0.2.36",
     "@solana/spl-token": "^0.4.6",
     "@solana/web3.js": "^1.91.7",
     "@solanafm/explorer-kit": "^1.0.5",

@@ -24,6 +24,17 @@ export class CoinGeckoClient {
     const res = await this._apisauce.get("/coins/markets", params);
     return res.data;
   }
+  async getCoinPriceByIds(ids: string[]): Promise<any> {
+    const params = {
+      ids: ids.join(","),
+      vs_currencies: "usd",
+      include_market_cap: true,
+      include_24hr_vol: true,
+      include_24hr_change: true,
+    };
+    const res = await this._apisauce.get("/simple/price", params);
+    return new Map(Object.entries(res.data as unknown as any));
+  }
 }
 
 export const coinGeckoClient = new CoinGeckoClient();

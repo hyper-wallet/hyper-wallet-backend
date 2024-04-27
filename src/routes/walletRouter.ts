@@ -1,15 +1,15 @@
 import express from "express";
 
 import {
-  getBalances,
-  getFungibleAssetsByOwner,
-  getNonFungibleAssetsByOwner,
+  getWalletNfts,
+  getWalletTokens,
+  getWalletTransactions,
 } from "../controllers/walletController";
 
 const walletRouter = express.Router();
 
-walletRouter.get("/balances", getBalances);
-walletRouter.get("/fungible-assets", getFungibleAssetsByOwner);
-walletRouter.get("/non-fungible-assets", getNonFungibleAssetsByOwner);
+walletRouter.get("/tokens", getWalletTokens);
+walletRouter.get("/nfts", getWalletNfts);
+walletRouter.get("/transactions", getWalletTransactions);
 
 export default walletRouter;
