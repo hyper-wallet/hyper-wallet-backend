@@ -95,13 +95,58 @@ export async function getWalletTransactions(req: Request, res: Response) {
     return res.json({ error: "Address is required" });
   }
 
-  const transactions = await shyft.wallet.parsedTransactionHistory({
+  const parsedTransactions = await shyft.wallet.parsedTransactionHistory({
     wallet: address.toString(),
+  });
+
+  const transactions = parsedTransactions.map((parsedTransaction) => {
+    const { actions } = parsedTransaction;
+    if (!actions || !actions.length) return null;
+    const action = actions[0];
+    const title = getTransactionTitle(address.toString(), action);
+    const subtitle = getTransactionSubtitle(address.toString(), action);
+    const value = getTransactionValue(address.toString(), action);
+    return {
+      title,
+      subtitle,
+      value,
+    };
   });
 
   res.json({ transactions });
 }
 
+function getTransactionTitle(walletAddress: string, action: any) {
+  const { type, info } = action;
+  const walletIsReceiver = info.receiver == walletAddress;
+  switch (type) {
+    case "SOL_TRANSFER":
+      return walletIsReceiver ? "Received" : "Send";
+    default:
+      return "Title";
+  }
+}
+
+function getTransactionSubtitle(walletAddress: string, action: any) {
+  const { type, info } = action;
+  const walletIsReceiver = info.receiver == walletAddress;
+  switch (type) {
+    case "SOL_TRANSFER":
+      return walletIsReceiver ? `From ${info.sender}` : `To ${info.receiver}`;
+    default:
+      return "Subtitle";
+  }
+}
+
+function getTransactionValue(walletAddress: string, action: any) {
+  const { type, info } = action;
+  switch (type) {
+    case "SOL_TRANSFER":
+      return `${info.amount} SOL`;
+    default:
+      return "Value";
+  }
+}
 export async function getFungibleAssetsByOwner(req: Request, res: Response) {
   const { address } = req.params;
   if (!address) {
