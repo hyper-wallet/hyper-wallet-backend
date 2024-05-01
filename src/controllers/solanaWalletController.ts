@@ -5,6 +5,8 @@ import { Request, Response } from "express";
 import { PublicKey, SystemProgram } from "@solana/web3.js";
 import {
   createTransferCheckedInstruction,
+  getAssociatedTokenAddress,
+  getAssociatedTokenAddressSync,
   getOrCreateAssociatedTokenAccount,
 } from "@solana/spl-token";
 

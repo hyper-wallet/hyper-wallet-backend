@@ -13,6 +13,7 @@ import {
 import { umi } from "../lib/umi";
 import { publicKey, unwrapOption } from "@metaplex-foundation/umi";
 import { shyft } from "../services/shyft";
+import { cache } from "../lib/cache";
 
 export async function getWalletTokens(req: Request, res: Response) {
   const { address } = req.query;
@@ -28,29 +29,33 @@ export async function getWalletTokens(req: Request, res: Response) {
   tokenBalances.forEach((tokenBalance) => {
     const { address, balance, info } = tokenBalance;
     const { name, symbol, image } = info;
+    const metadata = {
+      mint_address: address,
+      name,
+      symbol,
+      image,
+      decimals: 6,
+    };
+    cache.set(address, metadata);
     tokenBalanceByCGId.set(getCoinGeckoId(address), {
       balance,
-      metadata: {
-        mint_address: address,
-        name,
-        symbol,
-        image,
-        decimals: 6,
-      },
+      metadata,
     });
   });
 
   const solBalance =
     (await connection.getBalance(new PublicKey(address))) / LAMPORTS_PER_SOL;
+  const solMetadata = {
+    mint_address: "So11111111111111111111111111111111111111111",
+    name: "Solana",
+    symbol: "SOL",
+    image: "https://cdn.lu.ma/solana-coin-icons/SOL.png",
+    decimals: 9,
+  };
+  cache.set(solMetadata.mint_address, solMetadata);
   tokenBalanceByCGId.set("solana", {
     balance: solBalance,
-    metadata: {
-      mint_address: "So11111111111111111111111111111111111111111",
-      name: "Solana",
-      symbol: "SOL",
-      image: "",
-      decimals: 9,
-    },
+    metadata: solMetadata,
   });
 
   const coinGeckoIds = Array.from(tokenBalanceByCGId.keys());
@@ -81,6 +86,7 @@ export async function getWalletNfts(req: Request, res: Response) {
       owner: address.toString(),
     })
   ).nfts.map((nft) => {
+    cache.set(nft.mint, nft);
     return {
       metadata: nft,
     };
@@ -91,13 +97,18 @@ export async function getWalletNfts(req: Request, res: Response) {
 
 export async function getWalletTransactions(req: Request, res: Response) {
   const { address } = req.query;
+  console.log("🚀 ~ getWalletTransactions ~ address:", address);
   if (!address) {
     return res.json({ error: "Address is required" });
   }
 
-  const parsedTransactions = await shyft.wallet.parsedTransactionHistory({
-    wallet: address.toString(),
+  const parsedTransactions = await shyft.transaction.history({
+    account: address.toString(),
   });
+  console.log(
+    "🚀 ~ getWalletTransactions ~ parsedTransactions:",
+    parsedTransactions
+  );
 
   const transactions = parsedTransactions.map((parsedTransaction) => {
     const { actions } = parsedTransaction;
@@ -106,7 +117,9 @@ export async function getWalletTransactions(req: Request, res: Response) {
     const title = getTransactionTitle(address.toString(), action);
     const subtitle = getTransactionSubtitle(address.toString(), action);
     const value = getTransactionValue(address.toString(), action);
+    const icon = getTransactionIcon(address.toString(), action);
     return {
+      icon,
       title,
       subtitle,
       value,
@@ -147,6 +160,24 @@ function getTransactionValue(walletAddress: string, action: any) {
       return "Value";
   }
 }
+
+function getTransactionIcon(walletAddress: string, action: any) {
+  const { type, info } = action;
+  switch (type) {
+    case "SOL_TRANSFER":
+      // @ts-ignore
+      return cache.get("So11111111111111111111111111111111111111111").image;
+    case "NFT_TRANSFER":
+      // @ts-ignore
+      return cache.get(info.nft_address).image_uri;
+    case "TOKEN_TRANSFER":
+      // @ts-ignore
+      return cache.get(info.token_address).image;
+    default:
+      return null;
+  }
+}
+
 export async function getFungibleAssetsByOwner(req: Request, res: Response) {
   const { address } = req.params;
   if (!address) {
