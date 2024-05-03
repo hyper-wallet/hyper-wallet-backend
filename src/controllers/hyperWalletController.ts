@@ -1,13 +1,6 @@
 import { Request, Response } from "express";
-import {
-  connection,
-  hyperWalletProgram,
-  provider,
-} from "../lib/hyper-wallet-program";
+import { hyperWalletProgram, provider } from "../lib/hyper-wallet-program";
 import * as anchor from "@coral-xyz/anchor";
-import { coinGeckoClient } from "../services";
-import { TOKEN_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
-import { getCoinGeckoId } from "../lib/utils";
 import { gasFeeSponsor } from "../lib/gas-fee-sponsor";
 import { getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
@@ -29,11 +22,23 @@ export async function constructHyperTransferLamportsTx(
   req: Request,
   res: Response
 ) {
-  const { fromHyperPda, hyperOwnerAddress, toAddress, lamports } = req.body;
+  const {
+    fromHyperPda,
+    hyperOwnerAddress,
+    toAddress,
+    lamports,
+    otp_hash,
+    proof_hash,
+  } = req.body;
+
   const tx = new anchor.web3.Transaction();
   tx.add(
     await hyperWalletProgram.methods
-      .transferLamports(new anchor.BN(lamports))
+      .transferLamports({
+        lamports: new anchor.BN(lamports),
+        otp_hash,
+        proof_hash,
+      })
       .accounts({
         fromHyperWallet: fromHyperPda,
         hyperWalletOwner: hyperOwnerAddress,
@@ -61,8 +66,10 @@ export async function constructHyperTransferSplTx(req: Request, res: Response) {
     toAddress,
     tokenMintAddress,
     rawAmount,
+    otp_hash,
+    proof_hash,
   } = req.body;
-  console.log("🚀 ~ req.body:", req.body);
+
   const fromHyperWalletAta = await getOrCreateAssociatedTokenAccount(
     provider.connection,
     gasFeeSponsor,
@@ -80,7 +87,11 @@ export async function constructHyperTransferSplTx(req: Request, res: Response) {
   const tx = new anchor.web3.Transaction();
   tx.add(
     await hyperWalletProgram.methods
-      .transferSpl(new anchor.BN(rawAmount))
+      .transferSpl({
+        rawAmount: new anchor.BN(rawAmount),
+        otp_hash,
+        proof_hash,
+      })
       .accounts({
         fromHyperWalletAta: fromHyperWalletAta.address,
         fromHyperWallet: fromHyperWalletPda,
@@ -109,7 +120,10 @@ export async function constructHyperTransferNftTx(req: Request, res: Response) {
     hyperWalletOwnerAddress,
     toAddress,
     nftMintAddress,
+    otp_hash,
+    proof_hash,
   } = req.body;
+
   const fromHyperWalletAta = await getOrCreateAssociatedTokenAccount(
     provider.connection,
     gasFeeSponsor,
@@ -127,7 +141,11 @@ export async function constructHyperTransferNftTx(req: Request, res: Response) {
   const tx = new anchor.web3.Transaction();
   tx.add(
     await hyperWalletProgram.methods
-      .transferSpl(new anchor.BN(TRANSFER_NFT_RAW_AMOUNT))
+      .transferSpl({
+        rawAmount: new anchor.BN(TRANSFER_NFT_RAW_AMOUNT),
+        otp_hash,
+        proof_hash,
+      })
       .accounts({
         fromHyperWalletAta: fromHyperWalletAta.address,
         fromHyperWallet: fromHyperWalletPda,
