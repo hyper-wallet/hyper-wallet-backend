@@ -23,6 +23,21 @@ export async function getWalletTokens(req: Request, res: Response) {
 
   let tokenBalanceByCGId = new Map();
 
+  const solBalance =
+    (await connection.getBalance(new PublicKey(address))) / LAMPORTS_PER_SOL;
+  const solMetadata = {
+    mint_address: "So11111111111111111111111111111111111111111",
+    name: "Solana",
+    symbol: "SOL",
+    image: "https://cdn.lu.ma/solana-coin-icons/SOL.png",
+    decimals: 9,
+  };
+  cache.set(solMetadata.mint_address, solMetadata);
+  tokenBalanceByCGId.set("solana", {
+    balance: solBalance,
+    metadata: solMetadata,
+  });
+
   const tokenBalances = await shyft.wallet.getAllTokenBalance({
     wallet: address.toString(),
   });
@@ -41,21 +56,6 @@ export async function getWalletTokens(req: Request, res: Response) {
       balance,
       metadata,
     });
-  });
-
-  const solBalance =
-    (await connection.getBalance(new PublicKey(address))) / LAMPORTS_PER_SOL;
-  const solMetadata = {
-    mint_address: "So11111111111111111111111111111111111111111",
-    name: "Solana",
-    symbol: "SOL",
-    image: "https://cdn.lu.ma/solana-coin-icons/SOL.png",
-    decimals: 9,
-  };
-  cache.set(solMetadata.mint_address, solMetadata);
-  tokenBalanceByCGId.set("solana", {
-    balance: solBalance,
-    metadata: solMetadata,
   });
 
   const coinGeckoIds = Array.from(tokenBalanceByCGId.keys());
