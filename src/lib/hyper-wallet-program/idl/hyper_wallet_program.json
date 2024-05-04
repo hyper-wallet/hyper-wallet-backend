@@ -29,6 +29,27 @@
       "args": []
     },
     {
+      "name": "closeHyperWallet",
+      "accounts": [
+        {
+          "name": "hyperWallet",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "transferLamports",
       "accounts": [
         {

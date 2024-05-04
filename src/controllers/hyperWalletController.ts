@@ -18,6 +18,65 @@ export async function getHyperWalletAccount(req: Request, res: Response) {
   res.json({ hyperWalletAccount });
 }
 
+export async function constructCreateHyperWalletTx(
+  req: Request,
+  res: Response
+) {
+  const { hyperWalletPda, ownerAddress } = req.body;
+
+  const tx = new anchor.web3.Transaction();
+  tx.add(
+    await hyperWalletProgram.methods
+      .createHyperWallet()
+      .accounts({
+        hyperWallet: hyperWalletPda,
+        owner: ownerAddress,
+      })
+      .instruction()
+  );
+  tx.feePayer = gasFeeSponsor.publicKey;
+  tx.recentBlockhash = (
+    await provider.connection.getRecentBlockhash()
+  ).blockhash;
+  tx.partialSign(gasFeeSponsor);
+  const serializedTx = tx.serialize({
+    verifySignatures: true,
+    requireAllSignatures: false,
+  });
+  const base64tx = serializedTx.toString("base64");
+  res.json({ base64tx });
+}
+
+export async function constructCloseHyperWalletTx(req: Request, res: Response) {
+  const { hyperWalletPda, ownerAddress } = req.body;
+  console.log(
+    "🚀 ~ constructCloseAccountTx ~ { hyperWalletPda, ownerAddress }:",
+    { hyperWalletPda, ownerAddress }
+  );
+
+  const tx = new anchor.web3.Transaction();
+  tx.add(
+    await hyperWalletProgram.methods
+      .closeHyperWallet()
+      .accounts({
+        hyperWallet: hyperWalletPda,
+        owner: ownerAddress,
+      })
+      .instruction()
+  );
+  tx.feePayer = gasFeeSponsor.publicKey;
+  tx.recentBlockhash = (
+    await provider.connection.getRecentBlockhash()
+  ).blockhash;
+  tx.partialSign(gasFeeSponsor);
+  const serializedTx = tx.serialize({
+    verifySignatures: true,
+    requireAllSignatures: false,
+  });
+  const base64tx = serializedTx.toString("base64");
+  res.json({ base64tx });
+}
+
 export async function constructHyperTransferLamportsTx(
   req: Request,
   res: Response
@@ -27,8 +86,8 @@ export async function constructHyperTransferLamportsTx(
     hyperOwnerAddress,
     toAddress,
     lamports,
-    otp_hash,
-    proof_hash,
+    otpHash,
+    proofHash,
   } = req.body;
 
   const tx = new anchor.web3.Transaction();
@@ -36,8 +95,8 @@ export async function constructHyperTransferLamportsTx(
     await hyperWalletProgram.methods
       .transferLamports({
         lamports: new anchor.BN(lamports),
-        otp_hash,
-        proof_hash,
+        otpHash,
+        proofHash,
       })
       .accounts({
         fromHyperWallet: fromHyperPda,
@@ -66,8 +125,8 @@ export async function constructHyperTransferSplTx(req: Request, res: Response) {
     toAddress,
     tokenMintAddress,
     rawAmount,
-    otp_hash,
-    proof_hash,
+    otpHash,
+    proofHash,
   } = req.body;
 
   const fromHyperWalletAta = await getOrCreateAssociatedTokenAccount(
@@ -89,8 +148,9 @@ export async function constructHyperTransferSplTx(req: Request, res: Response) {
     await hyperWalletProgram.methods
       .transferSpl({
         rawAmount: new anchor.BN(rawAmount),
-        otp_hash,
-        proof_hash,
+        otpHash: [...Buffer.from(otpHash.data)],
+        //@ts-ignore
+        proofHash: [...proofHash.map((v) => [...Buffer.from(v.data)])],
       })
       .accounts({
         fromHyperWalletAta: fromHyperWalletAta.address,
@@ -120,8 +180,8 @@ export async function constructHyperTransferNftTx(req: Request, res: Response) {
     hyperWalletOwnerAddress,
     toAddress,
     nftMintAddress,
-    otp_hash,
-    proof_hash,
+    otpHash,
+    proofHash,
   } = req.body;
 
   const fromHyperWalletAta = await getOrCreateAssociatedTokenAccount(
@@ -143,14 +203,47 @@ export async function constructHyperTransferNftTx(req: Request, res: Response) {
     await hyperWalletProgram.methods
       .transferSpl({
         rawAmount: new anchor.BN(TRANSFER_NFT_RAW_AMOUNT),
-        otp_hash,
-        proof_hash,
+        otpHash,
+        proofHash,
       })
       .accounts({
         fromHyperWalletAta: fromHyperWalletAta.address,
         fromHyperWallet: fromHyperWalletPda,
         hyperWalletOwner: hyperWalletOwnerAddress,
         toAta: toAta.address,
+      })
+      .instruction()
+  );
+  tx.feePayer = gasFeeSponsor.publicKey;
+  tx.recentBlockhash = (
+    await provider.connection.getRecentBlockhash()
+  ).blockhash;
+  tx.partialSign(gasFeeSponsor);
+  const serializedTx = tx.serialize({
+    verifySignatures: true,
+    requireAllSignatures: false,
+  });
+  const base64tx = serializedTx.toString("base64");
+  res.json({ base64tx });
+}
+
+export async function constructSetupOtpTx(req: Request, res: Response) {
+  const { hyperWalletPda, hyperWalletOwnerAddress, initTime, root } = req.body;
+  console.log(
+    "🚀 ~ constructSetupOtpTx ~  { hyperWalletPda, hyperWalletOwnerAddress, initTime, root }:",
+    { hyperWalletPda, hyperWalletOwnerAddress, initTime, root }
+  );
+
+  const tx = new anchor.web3.Transaction();
+  tx.add(
+    await hyperWalletProgram.methods
+      .setUpOtp({
+        initTime,
+        root: [...Buffer.from(root.data)],
+      })
+      .accounts({
+        hyperWallet: hyperWalletPda,
+        hyperWalletOwner: hyperWalletOwnerAddress,
       })
       .instruction()
   );
