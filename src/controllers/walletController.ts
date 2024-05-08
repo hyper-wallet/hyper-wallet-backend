@@ -134,7 +134,9 @@ function getTransactionTitle(walletAddress: string, action: any) {
   const walletIsReceiver = info.receiver == walletAddress;
   switch (type) {
     case "SOL_TRANSFER":
-      return walletIsReceiver ? "Received" : "Send";
+      return walletIsReceiver ? "Received" : "Sent";
+    case "TOKEN_TRANSFER":
+      return walletIsReceiver ? "Received" : "Sent";
     default:
       return "Title";
   }
@@ -146,6 +148,8 @@ function getTransactionSubtitle(walletAddress: string, action: any) {
   switch (type) {
     case "SOL_TRANSFER":
       return walletIsReceiver ? `From ${info.sender}` : `To ${info.receiver}`;
+    case "TOKEN_TRANSFER":
+      return walletIsReceiver ? `From ${info.sender}` : `To ${info.receiver}`;
     default:
       return "Subtitle";
   }
@@ -156,6 +160,9 @@ function getTransactionValue(walletAddress: string, action: any) {
   switch (type) {
     case "SOL_TRANSFER":
       return `${info.amount} SOL`;
+    case "TOKEN_TRANSFER":
+      // @ts-ignore
+      return `${info.amount} ${cache.get(info.token_address).symbol}`;
     default:
       return "Value";
   }
@@ -169,10 +176,10 @@ function getTransactionIcon(walletAddress: string, action: any) {
       return cache.get("So11111111111111111111111111111111111111111").image;
     case "NFT_TRANSFER":
       // @ts-ignore
-      return cache.get(info.nft_address).image_uri;
+      return cache.get(info.nft_address)?.image_uri;
     case "TOKEN_TRANSFER":
       // @ts-ignore
-      return cache.get(info.token_address).image;
+      return cache.get(info.token_address)?.image;
     default:
       return null;
   }

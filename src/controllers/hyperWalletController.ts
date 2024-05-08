@@ -226,36 +226,3 @@ export async function constructHyperTransferNftTx(req: Request, res: Response) {
   const base64tx = serializedTx.toString("base64");
   res.json({ base64tx });
 }
-
-export async function constructSetupOtpTx(req: Request, res: Response) {
-  const { hyperWalletPda, hyperWalletOwnerAddress, initTime, root } = req.body;
-  console.log(
-    "🚀 ~ constructSetupOtpTx ~  { hyperWalletPda, hyperWalletOwnerAddress, initTime, root }:",
-    { hyperWalletPda, hyperWalletOwnerAddress, initTime, root }
-  );
-
-  const tx = new anchor.web3.Transaction();
-  tx.add(
-    await hyperWalletProgram.methods
-      .setUpOtp({
-        initTime,
-        root: [...Buffer.from(root.data)],
-      })
-      .accounts({
-        hyperWallet: hyperWalletPda,
-        hyperWalletOwner: hyperWalletOwnerAddress,
-      })
-      .instruction()
-  );
-  tx.feePayer = gasFeeSponsor.publicKey;
-  tx.recentBlockhash = (
-    await provider.connection.getRecentBlockhash()
-  ).blockhash;
-  tx.partialSign(gasFeeSponsor);
-  const serializedTx = tx.serialize({
-    verifySignatures: true,
-    requireAllSignatures: false,
-  });
-  const base64tx = serializedTx.toString("base64");
-  res.json({ base64tx });
-}
