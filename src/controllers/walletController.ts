@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
-import { connection, hyperWalletProgram } from "../lib/hyper-wallet-program";
+import { connection } from "../lib/hyper-wallet-program";
 import * as anchor from "@coral-xyz/anchor";
 import { coinGeckoClient } from "../services";
-import { TOKEN_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
 import { getCoinGeckoId } from "../lib/utils";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import {
@@ -14,6 +13,9 @@ import { umi } from "../lib/umi";
 import { publicKey, unwrapOption } from "@metaplex-foundation/umi";
 import { shyft } from "../services/shyft";
 import { cache } from "../lib/cache";
+import { SolanaParser } from "@debridge-finance/solana-transaction-parser";
+import hyperWalletProgramIdl from "../lib/hyper-wallet-program/idl/hyper_wallet_program.json";
+import { connections } from "../lib/connection";
 
 export async function getWalletTokens(req: Request, res: Response) {
   const { address } = req.query;
@@ -102,87 +104,20 @@ export async function getWalletTransactions(req: Request, res: Response) {
     return res.json({ error: "Address is required" });
   }
 
-  const parsedTransactions = await shyft.transaction.history({
-    account: address.toString(),
-  });
-  console.log(
-    "🚀 ~ getWalletTransactions ~ parsedTransactions:",
-    parsedTransactions
+  const signatures_1 = await connections.transaction.getSignaturesForAddress(
+    new PublicKey(address),
+    { limit: 10 }
   );
-
-  const transactions = parsedTransactions.map((parsedTransaction) => {
-    const { actions } = parsedTransaction;
-    if (!actions || !actions.length) return null;
-    const action = actions[0];
-    const title = getTransactionTitle(address.toString(), action);
-    const subtitle = getTransactionSubtitle(address.toString(), action);
-    const value = getTransactionValue(address.toString(), action);
-    const icon = getTransactionIcon(address.toString(), action);
-    return {
-      icon,
-      title,
-      subtitle,
-      value,
-    };
+  await new Promise((resolve) => {
+    setTimeout(() => resolve(true), 1000);
   });
-
-  res.json({ transactions });
-}
-
-function getTransactionTitle(walletAddress: string, action: any) {
-  const { type, info } = action;
-  const walletIsReceiver = info.receiver == walletAddress;
-  switch (type) {
-    case "SOL_TRANSFER":
-      return walletIsReceiver ? "Received" : "Sent";
-    case "TOKEN_TRANSFER":
-      return walletIsReceiver ? "Received" : "Sent";
-    default:
-      return "Title";
-  }
-}
-
-function getTransactionSubtitle(walletAddress: string, action: any) {
-  const { type, info } = action;
-  const walletIsReceiver = info.receiver == walletAddress;
-  switch (type) {
-    case "SOL_TRANSFER":
-      return walletIsReceiver ? `From ${info.sender}` : `To ${info.receiver}`;
-    case "TOKEN_TRANSFER":
-      return walletIsReceiver ? `From ${info.sender}` : `To ${info.receiver}`;
-    default:
-      return "Subtitle";
-  }
-}
-
-function getTransactionValue(walletAddress: string, action: any) {
-  const { type, info } = action;
-  switch (type) {
-    case "SOL_TRANSFER":
-      return `${info.amount} SOL`;
-    case "TOKEN_TRANSFER":
-      // @ts-ignore
-      return `${info.amount} ${cache.get(info.token_address).symbol}`;
-    default:
-      return "Value";
-  }
-}
-
-function getTransactionIcon(walletAddress: string, action: any) {
-  const { type, info } = action;
-  switch (type) {
-    case "SOL_TRANSFER":
-      // @ts-ignore
-      return cache.get("So11111111111111111111111111111111111111111").image;
-    case "NFT_TRANSFER":
-      // @ts-ignore
-      return cache.get(info.nft_address)?.image_uri;
-    case "TOKEN_TRANSFER":
-      // @ts-ignore
-      return cache.get(info.token_address)?.image;
-    default:
-      return null;
-  }
+  const signatures_2 = await connections.transaction.getSignaturesForAddress(
+    new PublicKey(address),
+    { limit: 10, before: signatures_1[9].signature }
+  );
+  const transactions_1 = await getParsedTransactions(signatures_1);
+  const transactions_2 = await getParsedTransactions(signatures_2);
+  res.json({ transactions: [...transactions_1, ...transactions_2] });
 }
 
 export async function getFungibleAssetsByOwner(req: Request, res: Response) {
@@ -304,4 +239,31 @@ export async function getTransactions(req: Request, res: Response) {
   });
 
   res.json({ transactions });
+}
+
+async function getParsedTransactions(signatures: any[]) {
+  const txParser = new SolanaParser([
+    {
+      idl: hyperWalletProgramIdl as unknown as anchor.Idl,
+      programId: "HYPERhd7VFrTzbRLyGsRcGQZkSfaKUGKAY8XDbaY5AgL",
+    },
+  ]);
+  const promises = signatures.map(async (signature, i) => {
+    try {
+      const parsed = (await txParser.parseTransaction(
+        connections.transaction,
+        signature.signature,
+        false
+      )) ?? [{}];
+      const res = {
+        ...signature,
+        ...parsed[0],
+      };
+      return res;
+    } catch {
+      return null;
+    }
+  });
+  const transactions = await Promise.all(promises);
+  return transactions;
 }
