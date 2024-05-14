@@ -57,7 +57,7 @@ export async function constructRemoveFromWhitelistTx(
     req.body;
 
   const ix = await hyperWalletProgram.methods
-    .addToWhitelist(new anchor.web3.PublicKey(addressToBeRemoved))
+    .removeFromWhitelist(new anchor.web3.PublicKey(addressToBeRemoved))
     .accounts({
       hyperWallet: hyperWalletPda,
       hyperWalletOwner: hyperWalletOwnerAddress,
