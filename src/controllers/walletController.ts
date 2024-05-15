@@ -16,6 +16,7 @@ import { cache } from "../lib/cache";
 import { SolanaParser } from "@debridge-finance/solana-transaction-parser";
 import hyperWalletProgramIdl from "../lib/hyper-wallet-program/idl/hyper_wallet_program.json";
 import { connections } from "../lib/connection";
+import { WalletTransactionModel } from "../models";
 
 export async function getWalletTokens(req: Request, res: Response) {
   const { address } = req.query;
@@ -104,20 +105,52 @@ export async function getWalletTransactions(req: Request, res: Response) {
     return res.json({ error: "Address is required" });
   }
 
-  const signatures_1 = await connections.transaction.getSignaturesForAddress(
-    new PublicKey(address),
-    { limit: 10 }
-  );
-  await new Promise((resolve) => {
-    setTimeout(() => resolve(true), 1000);
+  WalletTransactionModel.find({ walletAddress: address })
+    .then((transactions) => {
+      return res.json({ transactions });
+    })
+    .catch((e) => res.json({ error: e }));
+
+  // const signatures_1 = await connections.transaction.getSignaturesForAddress(
+  //   new PublicKey(address),
+  //   { limit: 10 }
+  // );
+  // await new Promise((resolve) => {
+  //   setTimeout(() => resolve(true), 1000);
+  // });
+  // const signatures_2 = await connections.transaction.getSignaturesForAddress(
+  //   new PublicKey(address),
+  //   { limit: 10, before: signatures_1[9].signature }
+  // );
+  // const transactions_1 = await getParsedTransactions(signatures_1);
+  // const transactions_2 = await getParsedTransactions(signatures_2);
+  // res.json({ transactions: [...transactions_1, ...transactions_2] });
+}
+
+export async function createWalletTransaction(req: Request, res: Response) {
+  const {
+    signature,
+    type,
+    title,
+    subTitle,
+    value,
+    subValue,
+    iconUrl,
+    walletAddress,
+  } = req.body;
+
+  const newWalletTransaction = new WalletTransactionModel({
+    signature,
+    type,
+    title,
+    subTitle,
+    value,
+    subValue,
+    iconUrl,
+    walletAddress,
   });
-  const signatures_2 = await connections.transaction.getSignaturesForAddress(
-    new PublicKey(address),
-    { limit: 10, before: signatures_1[9].signature }
-  );
-  const transactions_1 = await getParsedTransactions(signatures_1);
-  const transactions_2 = await getParsedTransactions(signatures_2);
-  res.json({ transactions: [...transactions_1, ...transactions_2] });
+
+  newWalletTransaction.save().then((transaction) => res.json({ transaction }));
 }
 
 export async function getFungibleAssetsByOwner(req: Request, res: Response) {
