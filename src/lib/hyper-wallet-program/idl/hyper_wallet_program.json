@@ -96,6 +96,11 @@
           "isSigner": false
         },
         {
+          "name": "to",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "toAta",
           "isMut": true,
           "isSigner": false
@@ -382,8 +387,16 @@
             "type": "u32"
           },
           {
-            "name": "spendingLimit",
-            "type": "u64"
+            "name": "spendingLimitEnabled",
+            "type": "bool"
+          },
+          {
+            "name": "spendingLimits",
+            "type": {
+              "vec": {
+                "defined": "SpendingLimit"
+              }
+            }
           }
         ]
       }
@@ -489,6 +502,30 @@
           }
         ]
       }
+    },
+    {
+      "name": "SpendingLimit",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "ata",
+            "type": "publicKey"
+          },
+          {
+            "name": "rawAmount",
+            "type": "u64"
+          },
+          {
+            "name": "rawAllowanceLeft",
+            "type": "u64"
+          },
+          {
+            "name": "lastReset",
+            "type": "i64"
+          }
+        ]
+      }
     }
   ],
   "errors": [
@@ -519,6 +556,10 @@
     {
       "code": 6006,
       "name": "AddressNotWhiteListed"
+    },
+    {
+      "code": 6007,
+      "name": "SpendingLimitExceeded"
     }
   ],
   "metadata": {

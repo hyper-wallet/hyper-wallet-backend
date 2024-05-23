@@ -96,6 +96,11 @@ export type HyperWalletProgram = {
           isSigner: false;
         },
         {
+          name: "to";
+          isMut: false;
+          isSigner: false;
+        },
+        {
           name: "toAta";
           isMut: true;
           isSigner: false;
@@ -382,8 +387,16 @@ export type HyperWalletProgram = {
             type: "u32";
           },
           {
-            name: "spendingLimit";
-            type: "u64";
+            name: "spendingLimitEnabled";
+            type: "bool";
+          },
+          {
+            name: "spendingLimits";
+            type: {
+              vec: {
+                defined: "SpendingLimit";
+              };
+            };
           }
         ];
       };
@@ -489,6 +502,30 @@ export type HyperWalletProgram = {
           }
         ];
       };
+    },
+    {
+      name: "SpendingLimit";
+      type: {
+        kind: "struct";
+        fields: [
+          {
+            name: "ata";
+            type: "publicKey";
+          },
+          {
+            name: "rawAmount";
+            type: "u64";
+          },
+          {
+            name: "rawAllowanceLeft";
+            type: "u64";
+          },
+          {
+            name: "lastReset";
+            type: "i64";
+          }
+        ];
+      };
     }
   ];
   errors: [
@@ -519,6 +556,10 @@ export type HyperWalletProgram = {
     {
       code: 6006;
       name: "AddressNotWhiteListed";
+    },
+    {
+      code: 6007;
+      name: "SpendingLimitExceeded";
     }
   ];
 };
@@ -618,6 +659,11 @@ export const IDL: HyperWalletProgram = {
         {
           name: "fromHyperWalletAta",
           isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "to",
+          isMut: false,
           isSigner: false,
         },
         {
@@ -907,8 +953,16 @@ export const IDL: HyperWalletProgram = {
             type: "u32",
           },
           {
-            name: "spendingLimit",
-            type: "u64",
+            name: "spendingLimitEnabled",
+            type: "bool",
+          },
+          {
+            name: "spendingLimits",
+            type: {
+              vec: {
+                defined: "SpendingLimit",
+              },
+            },
           },
         ],
       },
@@ -1015,6 +1069,30 @@ export const IDL: HyperWalletProgram = {
         ],
       },
     },
+    {
+      name: "SpendingLimit",
+      type: {
+        kind: "struct",
+        fields: [
+          {
+            name: "ata",
+            type: "publicKey",
+          },
+          {
+            name: "rawAmount",
+            type: "u64",
+          },
+          {
+            name: "rawAllowanceLeft",
+            type: "u64",
+          },
+          {
+            name: "lastReset",
+            type: "i64",
+          },
+        ],
+      },
+    },
   ],
   errors: [
     {
@@ -1044,6 +1122,10 @@ export const IDL: HyperWalletProgram = {
     {
       code: 6006,
       name: "AddressNotWhiteListed",
+    },
+    {
+      code: 6007,
+      name: "SpendingLimitExceeded",
     },
   ],
 };

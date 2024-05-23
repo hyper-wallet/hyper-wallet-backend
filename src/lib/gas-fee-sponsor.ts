@@ -8,8 +8,12 @@ import {
   getOrCreateAssociatedTokenAccount,
 } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
-const privateKey =
-  "Tptte9auYxHzUNki3ACapEMoGbmeubMjm2TV7jx7hDwJptBoiet99o3abNUnDyEDLT9npJhtR5U16Ym1bedm54f";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const privateKey = process.env.GAS_FEE_SPONSOR_PRIVATE_KEY ?? "";
+
 export const gasFeeSponsor = web3.Keypair.fromSecretKey(
   bs58.decode(privateKey)
 );

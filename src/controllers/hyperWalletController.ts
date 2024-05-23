@@ -1,7 +1,11 @@
 import { Request, Response } from "express";
 import { hyperWalletProgram, provider } from "../lib/hyper-wallet-program";
 import * as anchor from "@coral-xyz/anchor";
-import { gasFeeSponsor } from "../lib/gas-fee-sponsor";
+import {
+  createPayGasFeeWithUsdtTx,
+  createSponsoredTx,
+  gasFeeSponsor,
+} from "../lib/gas-fee-sponsor";
 import { getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
 
@@ -127,6 +131,7 @@ export async function constructHyperTransferSplTx(req: Request, res: Response) {
     rawAmount,
     otpHash,
     proofHash,
+    feeToken,
   } = req.body;
 
   const fromHyperWalletAta = await getOrCreateAssociatedTokenAccount(
@@ -143,34 +148,31 @@ export async function constructHyperTransferSplTx(req: Request, res: Response) {
     new PublicKey(toAddress),
     true
   );
-  const tx = new anchor.web3.Transaction();
-  tx.add(
-    await hyperWalletProgram.methods
-      .transferSpl({
-        rawAmount: new anchor.BN(rawAmount),
-        otpHash: [...Buffer.from(otpHash.data)],
-        //@ts-ignore
-        proofHash: [...proofHash.map((v) => [...Buffer.from(v.data)])],
-      })
-      .accounts({
-        fromHyperWalletAta: fromHyperWalletAta.address,
-        fromHyperWallet: fromHyperWalletPda,
-        hyperWalletOwner: hyperWalletOwnerAddress,
-        toAta: toAta.address,
-      })
-      .instruction()
-  );
-  tx.feePayer = gasFeeSponsor.publicKey;
-  tx.recentBlockhash = (
-    await provider.connection.getRecentBlockhash()
-  ).blockhash;
-  tx.partialSign(gasFeeSponsor);
-  const serializedTx = tx.serialize({
-    verifySignatures: true,
-    requireAllSignatures: false,
-  });
-  const base64tx = serializedTx.toString("base64");
-  res.json({ base64tx });
+  const ix = await hyperWalletProgram.methods
+    .transferSpl({
+      rawAmount: new anchor.BN(rawAmount),
+      otpHash: [...Buffer.from(otpHash.data)],
+      //@ts-ignore
+      proofHash: [...proofHash.map((v) => [...Buffer.from(v.data)])],
+    })
+    .accounts({
+      fromHyperWalletAta: fromHyperWalletAta.address,
+      fromHyperWallet: fromHyperWalletPda,
+      hyperWalletOwner: hyperWalletOwnerAddress,
+      to: toAddress,
+      toAta: toAta.address,
+    })
+    .instruction();
+  if (feeToken == "usdt") {
+    const { base64tx } = await createPayGasFeeWithUsdtTx(
+      ix,
+      fromHyperWalletPda
+    );
+    res.json({ base64tx });
+  } else {
+    const { base64tx } = await createSponsoredTx(ix);
+    res.json({ base64tx });
+  }
 }
 
 export async function constructHyperTransferNftTx(req: Request, res: Response) {
@@ -210,6 +212,7 @@ export async function constructHyperTransferNftTx(req: Request, res: Response) {
         fromHyperWalletAta: fromHyperWalletAta.address,
         fromHyperWallet: fromHyperWalletPda,
         hyperWalletOwner: hyperWalletOwnerAddress,
+        to: toAddress,
         toAta: toAta.address,
       })
       .instruction()
