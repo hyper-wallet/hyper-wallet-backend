@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { hyperWalletProgram } from "../lib/hyper-wallet-program";
-import { createSponsoredTx } from "../lib/gas-fee-sponsor";
+import { gasFeeSponsor } from "../services";
 
 export async function constructSetupOtpTx(req: Request, res: Response) {
   const { hyperWalletPda, hyperWalletOwnerAddress, initTime, root } = req.body;
@@ -15,17 +15,13 @@ export async function constructSetupOtpTx(req: Request, res: Response) {
       hyperWalletOwner: hyperWalletOwnerAddress,
     })
     .instruction();
-  const { base64tx } = await createSponsoredTx(ix);
+  const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(ix);
 
   res.json({ base64tx });
 }
 
 export async function constructEnableOtpTx(req: Request, res: Response) {
   const { hyperWalletPda, hyperWalletOwnerAddress } = req.body;
-  console.log(
-    "🚀 ~ constructEnableOtpTx ~ { hyperWalletPda, hyperWalletOwnerAddress }:",
-    { hyperWalletPda, hyperWalletOwnerAddress }
-  );
 
   const ix = await hyperWalletProgram.methods
     .enableOtp()
@@ -34,7 +30,7 @@ export async function constructEnableOtpTx(req: Request, res: Response) {
       hyperWalletOwner: hyperWalletOwnerAddress,
     })
     .instruction();
-  const { base64tx } = await createSponsoredTx(ix);
+  const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(ix);
 
   res.json({ base64tx });
 }
@@ -49,7 +45,7 @@ export async function constructDisableOtpTx(req: Request, res: Response) {
       hyperWalletOwner: hyperWalletOwnerAddress,
     })
     .instruction();
-  const { base64tx } = await createSponsoredTx(ix);
+  const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(ix);
 
   res.json({ base64tx });
 }

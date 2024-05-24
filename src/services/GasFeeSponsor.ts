@@ -1,4 +1,3 @@
-import { Connection, Keypair, clusterApiUrl } from "@solana/web3.js";
 import { INetwork } from "./INetwork";
 import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 import { web3 } from "@coral-xyz/anchor";
@@ -6,19 +5,22 @@ import {
   createTransferCheckedInstruction,
   getOrCreateAssociatedTokenAccount,
 } from "@solana/spl-token";
-import { Network } from "./Network";
 
 export class GasFeeSponsor {
-  private _signer: Keypair;
+  private _signer: web3.Keypair;
   private _network: INetwork;
 
   constructor(privateKey: string, network: INetwork) {
-    this._signer = Keypair.fromSecretKey(bs58.decode(privateKey));
+    this._signer = web3.Keypair.fromSecretKey(bs58.decode(privateKey));
     this._network = network;
   }
 
   get address() {
     return this._signer.publicKey;
+  }
+
+  get signer() {
+    return this._signer;
   }
 
   async createFullySponsoredTx(instruction: web3.TransactionInstruction) {
@@ -76,10 +78,3 @@ export class GasFeeSponsor {
     return { base64tx };
   }
 }
-
-const network = new Network(new Connection(clusterApiUrl("devnet")));
-
-export const getFeeSponsor = new GasFeeSponsor(
-  process.env.GAS_FEE_SPONSOR_PRIVATE_KEY ?? "",
-  network
-);

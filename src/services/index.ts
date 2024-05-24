@@ -2,6 +2,11 @@ import { CoinGeckoService } from "./CoinGeckoService";
 import { IWalletAssetService } from "./IWalletAssetService";
 import { ITokenPriceService } from "./ITokenPriceService";
 import { ShyftService } from "./ShyftService";
+import { Network } from "./Network";
+import { GasFeeSponsor } from "./GasFeeSponsor";
+import { configDotenv } from "dotenv";
+
+configDotenv();
 
 const devnetAddressToCoinGeckoId = {
   "5oUHhQyq6wgq1HnbVf5Vr3Soxu5FNU1Jv2YeKPLopg7a": "tether",
@@ -27,3 +32,10 @@ export function getWalletAssetService(): IWalletAssetService {
   }
   return shyftService;
 }
+
+export const network = new Network();
+
+export const gasFeeSponsor = new GasFeeSponsor(
+  process.env.GAS_FEE_SPONSOR_PRIVATE_KEY ?? "",
+  network
+);

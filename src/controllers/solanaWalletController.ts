@@ -1,23 +1,17 @@
-import * as anchor from "@coral-xyz/anchor";
-import { provider } from "../lib/hyper-wallet-program";
-import {
-  createPayGasFeeWithUsdtTx,
-  createSponsoredTx,
-  gasFeeSponsor,
-} from "../lib/gas-fee-sponsor";
+import { web3 } from "@coral-xyz/anchor";
+import { gasFeeSponsor } from "../services";
 import { Request, Response } from "express";
 import { PublicKey, SystemProgram } from "@solana/web3.js";
 import {
   createTransferCheckedInstruction,
-  getAssociatedTokenAddress,
-  getAssociatedTokenAddressSync,
   getOrCreateAssociatedTokenAccount,
 } from "@solana/spl-token";
+import { network } from "../services";
 
 export async function constructTransferLamportsTx(req: Request, res: Response) {
   const { fromAddress, toAddress, lamports } = req.body;
 
-  const tx = new anchor.web3.Transaction();
+  const tx = new web3.Transaction();
   tx.add(
     SystemProgram.transfer({
       fromPubkey: new PublicKey(fromAddress),
@@ -25,11 +19,9 @@ export async function constructTransferLamportsTx(req: Request, res: Response) {
       lamports,
     })
   );
-  tx.feePayer = gasFeeSponsor.publicKey;
-  tx.recentBlockhash = (
-    await provider.connection.getRecentBlockhash()
-  ).blockhash;
-  tx.partialSign(gasFeeSponsor);
+  tx.feePayer = gasFeeSponsor.address;
+  tx.recentBlockhash = await network.getRecentBlockhash();
+  tx.partialSign(gasFeeSponsor.signer);
   const serializedTx = tx.serialize({
     verifySignatures: true,
     requireAllSignatures: false,
@@ -43,16 +35,16 @@ export async function constructTransferSplTx(req: Request, res: Response) {
     req.body;
 
   const fromAta = await getOrCreateAssociatedTokenAccount(
-    provider.connection,
-    gasFeeSponsor,
+    network.connection,
+    gasFeeSponsor.signer,
     new PublicKey(tokenMintAddress),
     new PublicKey(fromAddress),
     true
   );
 
   const toAta = await getOrCreateAssociatedTokenAccount(
-    provider.connection,
-    gasFeeSponsor,
+    network.connection,
+    gasFeeSponsor.signer,
     new PublicKey(tokenMintAddress),
     new PublicKey(toAddress),
     true
@@ -68,10 +60,13 @@ export async function constructTransferSplTx(req: Request, res: Response) {
   );
   if (feeToken == "USDT") {
     console.log("🚀 ~ constructTransferSplTx ~ feeToken:", feeToken);
-    const { base64tx } = await createPayGasFeeWithUsdtTx(ix, fromAddress);
+    const { base64tx } = await gasFeeSponsor.createPayGasFeeWithUsdtTx(
+      ix,
+      fromAddress
+    );
     return res.json({ base64tx });
   } else {
-    const { base64tx } = await createSponsoredTx(ix);
+    const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(ix);
     return res.json({ base64tx });
   }
 }
@@ -80,16 +75,16 @@ export async function constructTransferNftTx(req: Request, res: Response) {
   const { fromAddress, toAddress, nftMintAddress, feeToken } = req.body;
 
   const fromAta = await getOrCreateAssociatedTokenAccount(
-    provider.connection,
-    gasFeeSponsor,
+    network.connection,
+    gasFeeSponsor.signer,
     new PublicKey(nftMintAddress),
     new PublicKey(fromAddress),
     true
   );
 
   const toAta = await getOrCreateAssociatedTokenAccount(
-    provider.connection,
-    gasFeeSponsor,
+    network.connection,
+    gasFeeSponsor.signer,
     new PublicKey(nftMintAddress),
     new PublicKey(toAddress),
     true
@@ -105,10 +100,13 @@ export async function constructTransferNftTx(req: Request, res: Response) {
   );
   if (feeToken == "USDT") {
     console.log("🚀 ~ constructTransferSplTx ~ feeToken:", feeToken);
-    const { base64tx } = await createPayGasFeeWithUsdtTx(ix, fromAddress);
+    const { base64tx } = await gasFeeSponsor.createPayGasFeeWithUsdtTx(
+      ix,
+      fromAddress
+    );
     return res.json({ base64tx });
   } else {
-    const { base64tx } = await createSponsoredTx(ix);
+    const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(ix);
     return res.json({ base64tx });
   }
 }

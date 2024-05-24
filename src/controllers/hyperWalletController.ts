@@ -1,13 +1,9 @@
 import { Request, Response } from "express";
-import { hyperWalletProgram, provider } from "../lib/hyper-wallet-program";
-import * as anchor from "@coral-xyz/anchor";
-import {
-  createPayGasFeeWithUsdtTx,
-  createSponsoredTx,
-  gasFeeSponsor,
-} from "../lib/gas-fee-sponsor";
+import { hyperWalletProgram } from "../lib/hyper-wallet-program";
+import { web3, BN } from "@coral-xyz/anchor";
 import { getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
+import { gasFeeSponsor, network } from "../services";
 
 export async function getHyperWalletAccount(req: Request, res: Response) {
   const { address } = req.query;
@@ -17,7 +13,7 @@ export async function getHyperWalletAccount(req: Request, res: Response) {
 
   const hyperWalletAccount =
     await hyperWalletProgram.account.hyperWallet.fetchNullable(
-      new anchor.web3.PublicKey(address)
+      new web3.PublicKey(address)
     );
   res.json({ hyperWalletAccount });
 }
@@ -28,7 +24,7 @@ export async function constructCreateHyperWalletTx(
 ) {
   const { hyperWalletPda, ownerAddress } = req.body;
 
-  const tx = new anchor.web3.Transaction();
+  const tx = new web3.Transaction();
   tx.add(
     await hyperWalletProgram.methods
       .createHyperWallet()
@@ -38,11 +34,9 @@ export async function constructCreateHyperWalletTx(
       })
       .instruction()
   );
-  tx.feePayer = gasFeeSponsor.publicKey;
-  tx.recentBlockhash = (
-    await provider.connection.getRecentBlockhash()
-  ).blockhash;
-  tx.partialSign(gasFeeSponsor);
+  tx.feePayer = gasFeeSponsor.address;
+  tx.recentBlockhash = await network.getRecentBlockhash();
+  tx.partialSign(gasFeeSponsor.signer);
   const serializedTx = tx.serialize({
     verifySignatures: true,
     requireAllSignatures: false,
@@ -53,12 +47,8 @@ export async function constructCreateHyperWalletTx(
 
 export async function constructCloseHyperWalletTx(req: Request, res: Response) {
   const { hyperWalletPda, ownerAddress } = req.body;
-  console.log(
-    "🚀 ~ constructCloseAccountTx ~ { hyperWalletPda, ownerAddress }:",
-    { hyperWalletPda, ownerAddress }
-  );
 
-  const tx = new anchor.web3.Transaction();
+  const tx = new web3.Transaction();
   tx.add(
     await hyperWalletProgram.methods
       .closeHyperWallet()
@@ -68,11 +58,9 @@ export async function constructCloseHyperWalletTx(req: Request, res: Response) {
       })
       .instruction()
   );
-  tx.feePayer = gasFeeSponsor.publicKey;
-  tx.recentBlockhash = (
-    await provider.connection.getRecentBlockhash()
-  ).blockhash;
-  tx.partialSign(gasFeeSponsor);
+  tx.feePayer = gasFeeSponsor.address;
+  tx.recentBlockhash = await network.getRecentBlockhash();
+  tx.partialSign(gasFeeSponsor.signer);
   const serializedTx = tx.serialize({
     verifySignatures: true,
     requireAllSignatures: false,
@@ -94,11 +82,11 @@ export async function constructHyperTransferLamportsTx(
     proofHash,
   } = req.body;
 
-  const tx = new anchor.web3.Transaction();
+  const tx = new web3.Transaction();
   tx.add(
     await hyperWalletProgram.methods
       .transferLamports({
-        lamports: new anchor.BN(lamports),
+        lamports: new BN(lamports),
         otpHash,
         proofHash,
       })
@@ -109,11 +97,9 @@ export async function constructHyperTransferLamportsTx(
       })
       .instruction()
   );
-  tx.feePayer = gasFeeSponsor.publicKey;
-  tx.recentBlockhash = (
-    await provider.connection.getRecentBlockhash()
-  ).blockhash;
-  tx.partialSign(gasFeeSponsor);
+  tx.feePayer = gasFeeSponsor.address;
+  tx.recentBlockhash = await network.getRecentBlockhash();
+  tx.partialSign(gasFeeSponsor.signer);
   const serializedTx = tx.serialize({
     verifySignatures: true,
     requireAllSignatures: false,
@@ -135,22 +121,22 @@ export async function constructHyperTransferSplTx(req: Request, res: Response) {
   } = req.body;
 
   const fromHyperWalletAta = await getOrCreateAssociatedTokenAccount(
-    provider.connection,
-    gasFeeSponsor,
+    network.connection,
+    gasFeeSponsor.signer,
     new PublicKey(tokenMintAddress),
     new PublicKey(fromHyperWalletPda),
     true
   );
   const toAta = await getOrCreateAssociatedTokenAccount(
-    provider.connection,
-    gasFeeSponsor,
+    network.connection,
+    gasFeeSponsor.signer,
     new PublicKey(tokenMintAddress),
     new PublicKey(toAddress),
     true
   );
   const ix = await hyperWalletProgram.methods
     .transferSpl({
-      rawAmount: new anchor.BN(rawAmount),
+      rawAmount: new BN(rawAmount),
       otpHash: [...Buffer.from(otpHash.data)],
       //@ts-ignore
       proofHash: [...proofHash.map((v) => [...Buffer.from(v.data)])],
@@ -164,13 +150,13 @@ export async function constructHyperTransferSplTx(req: Request, res: Response) {
     })
     .instruction();
   if (feeToken == "usdt") {
-    const { base64tx } = await createPayGasFeeWithUsdtTx(
+    const { base64tx } = await gasFeeSponsor.createPayGasFeeWithUsdtTx(
       ix,
       fromHyperWalletPda
     );
     res.json({ base64tx });
   } else {
-    const { base64tx } = await createSponsoredTx(ix);
+    const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(ix);
     res.json({ base64tx });
   }
 }
@@ -187,24 +173,24 @@ export async function constructHyperTransferNftTx(req: Request, res: Response) {
   } = req.body;
 
   const fromHyperWalletAta = await getOrCreateAssociatedTokenAccount(
-    provider.connection,
-    gasFeeSponsor,
+    network.connection,
+    gasFeeSponsor.signer,
     new PublicKey(nftMintAddress),
     new PublicKey(fromHyperWalletPda),
     true
   );
   const toAta = await getOrCreateAssociatedTokenAccount(
-    provider.connection,
-    gasFeeSponsor,
+    network.connection,
+    gasFeeSponsor.signer,
     new PublicKey(nftMintAddress),
     new PublicKey(toAddress),
     true
   );
-  const tx = new anchor.web3.Transaction();
+  const tx = new web3.Transaction();
   tx.add(
     await hyperWalletProgram.methods
       .transferSpl({
-        rawAmount: new anchor.BN(TRANSFER_NFT_RAW_AMOUNT),
+        rawAmount: new BN(TRANSFER_NFT_RAW_AMOUNT),
         otpHash,
         proofHash,
       })
@@ -217,11 +203,9 @@ export async function constructHyperTransferNftTx(req: Request, res: Response) {
       })
       .instruction()
   );
-  tx.feePayer = gasFeeSponsor.publicKey;
-  tx.recentBlockhash = (
-    await provider.connection.getRecentBlockhash()
-  ).blockhash;
-  tx.partialSign(gasFeeSponsor);
+  tx.feePayer = gasFeeSponsor.address;
+  tx.recentBlockhash = await network.getRecentBlockhash();
+  tx.partialSign(gasFeeSponsor.signer);
   const serializedTx = tx.serialize({
     verifySignatures: true,
     requireAllSignatures: false,

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { hyperWalletProgram } from "../lib/hyper-wallet-program";
-import { createSponsoredTx } from "../lib/gas-fee-sponsor";
-import * as anchor from "@coral-xyz/anchor";
+import { web3 } from "@coral-xyz/anchor";
+import { gasFeeSponsor } from "../services";
 
 export async function constructEnableWhitelistTx(req: Request, res: Response) {
   const { hyperWalletPda, hyperWalletOwnerAddress } = req.body;
@@ -13,7 +13,7 @@ export async function constructEnableWhitelistTx(req: Request, res: Response) {
       hyperWalletOwner: hyperWalletOwnerAddress,
     })
     .instruction();
-  const { base64tx } = await createSponsoredTx(ix);
+  const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(ix);
 
   res.json({ base64tx });
 }
@@ -28,7 +28,7 @@ export async function constructDisableWhitelistTx(req: Request, res: Response) {
       hyperWalletOwner: hyperWalletOwnerAddress,
     })
     .instruction();
-  const { base64tx } = await createSponsoredTx(ix);
+  const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(ix);
 
   res.json({ base64tx });
 }
@@ -38,13 +38,13 @@ export async function constructAddToWhitelistTx(req: Request, res: Response) {
     req.body;
 
   const ix = await hyperWalletProgram.methods
-    .addToWhitelist(new anchor.web3.PublicKey(addressToBeAdded))
+    .addToWhitelist(new web3.PublicKey(addressToBeAdded))
     .accounts({
       hyperWallet: hyperWalletPda,
       hyperWalletOwner: hyperWalletOwnerAddress,
     })
     .instruction();
-  const { base64tx } = await createSponsoredTx(ix);
+  const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(ix);
 
   res.json({ base64tx });
 }
@@ -57,13 +57,13 @@ export async function constructRemoveFromWhitelistTx(
     req.body;
 
   const ix = await hyperWalletProgram.methods
-    .removeFromWhitelist(new anchor.web3.PublicKey(addressToBeRemoved))
+    .removeFromWhitelist(new web3.PublicKey(addressToBeRemoved))
     .accounts({
       hyperWallet: hyperWalletPda,
       hyperWalletOwner: hyperWalletOwnerAddress,
     })
     .instruction();
-  const { base64tx } = await createSponsoredTx(ix);
+  const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(ix);
 
   res.json({ base64tx });
 }
