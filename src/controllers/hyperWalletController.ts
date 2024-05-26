@@ -5,6 +5,8 @@ import { getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
 import { gasFeeSponsor, network } from "../services";
 
+const USDT_MINT_ADDRESS = "5oUHhQyq6wgq1HnbVf5Vr3Soxu5FNU1Jv2YeKPLopg7a";
+
 export async function getHyperWalletAccount(req: Request, res: Response) {
   const { address } = req.query;
   if (!address) {
@@ -134,31 +136,56 @@ export async function constructHyperTransferSplTx(req: Request, res: Response) {
     new PublicKey(toAddress),
     true
   );
-  const ix = await hyperWalletProgram.methods
-    .transferSpl({
-      rawAmount: new BN(rawAmount),
-      otpHash: [...Buffer.from(otpHash.data)],
-      //@ts-ignore
-      proofHash: [...proofHash.map((v) => [...Buffer.from(v.data)])],
-    })
-    .accounts({
-      fromHyperWalletAta: fromHyperWalletAta.address,
-      fromHyperWallet: fromHyperWalletPda,
-      hyperWalletOwner: hyperWalletOwnerAddress,
-      to: toAddress,
-      toAta: toAta.address,
-    })
-    .instruction();
+
+  const tx = new web3.Transaction();
+  tx.add(
+    await hyperWalletProgram.methods
+      .transferSpl({
+        rawAmount: new BN(rawAmount),
+        otpHash: [...Buffer.from(otpHash.data)],
+        //@ts-ignore
+        proofHash: [...proofHash.map((v) => [...Buffer.from(v.data)])],
+      })
+      .accounts({
+        fromHyperWalletAta: fromHyperWalletAta.address,
+        fromHyperWallet: fromHyperWalletPda,
+        hyperWalletOwner: hyperWalletOwnerAddress,
+        to: toAddress,
+        toAta: toAta.address,
+      })
+      .instruction()
+  );
+
   if (feeToken == "usdt") {
-    const { base64tx } = await gasFeeSponsor.createPayGasFeeWithUsdtTx(
-      ix,
-      fromHyperWalletPda
+    const gasFeeSponsorUsdtAta = await gasFeeSponsor.getUsdtAta();
+    const hyperWalletUsdtAta = await getOrCreateAssociatedTokenAccount(
+      network.connection,
+      gasFeeSponsor.signer,
+      new PublicKey(USDT_MINT_ADDRESS),
+      new PublicKey(fromHyperWalletPda),
+      true
     );
-    res.json({ base64tx });
-  } else {
-    const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(ix);
-    res.json({ base64tx });
+    tx.add(
+      await hyperWalletProgram.methods
+        .transferSpl({
+          rawAmount: new BN(0.000015 * Math.pow(10, 6)),
+          otpHash: [...Buffer.from(otpHash.data)],
+          //@ts-ignore
+          proofHash: [...proofHash.map((v) => [...Buffer.from(v.data)])],
+        })
+        .accounts({
+          fromHyperWalletAta: hyperWalletUsdtAta.address,
+          fromHyperWallet: fromHyperWalletPda,
+          hyperWalletOwner: hyperWalletOwnerAddress,
+          to: gasFeeSponsor.address,
+          toAta: gasFeeSponsorUsdtAta.address,
+        })
+        .instruction()
+    );
   }
+
+  const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(tx);
+  res.json({ base64tx });
 }
 
 export async function constructHyperTransferNftTx(req: Request, res: Response) {
@@ -170,6 +197,7 @@ export async function constructHyperTransferNftTx(req: Request, res: Response) {
     nftMintAddress,
     otpHash,
     proofHash,
+    feeToken,
   } = req.body;
 
   const fromHyperWalletAta = await getOrCreateAssociatedTokenAccount(
@@ -186,6 +214,7 @@ export async function constructHyperTransferNftTx(req: Request, res: Response) {
     new PublicKey(toAddress),
     true
   );
+
   const tx = new web3.Transaction();
   tx.add(
     await hyperWalletProgram.methods
@@ -203,13 +232,34 @@ export async function constructHyperTransferNftTx(req: Request, res: Response) {
       })
       .instruction()
   );
-  tx.feePayer = gasFeeSponsor.address;
-  tx.recentBlockhash = await network.getRecentBlockhash();
-  tx.partialSign(gasFeeSponsor.signer);
-  const serializedTx = tx.serialize({
-    verifySignatures: true,
-    requireAllSignatures: false,
-  });
-  const base64tx = serializedTx.toString("base64");
+
+  if (feeToken == "usdt") {
+    const gasFeeSponsorUsdtAta = await gasFeeSponsor.getUsdtAta();
+    const hyperWalletUsdtAta = await getOrCreateAssociatedTokenAccount(
+      network.connection,
+      gasFeeSponsor.signer,
+      new PublicKey(USDT_MINT_ADDRESS),
+      new PublicKey(fromHyperWalletPda),
+      true
+    );
+    tx.add(
+      await hyperWalletProgram.methods
+        .transferSpl({
+          rawAmount: new BN(0.000015 * Math.pow(10, 6)),
+          otpHash: [...Buffer.from(otpHash.data)],
+          //@ts-ignore
+          proofHash: [...proofHash.map((v) => [...Buffer.from(v.data)])],
+        })
+        .accounts({
+          fromHyperWalletAta: hyperWalletUsdtAta.address,
+          fromHyperWallet: fromHyperWalletPda,
+          hyperWalletOwner: hyperWalletOwnerAddress,
+          to: gasFeeSponsor.address,
+          toAta: gasFeeSponsorUsdtAta.address,
+        })
+        .instruction()
+    );
+  }
+  const base64tx = await gasFeeSponsor.createFullySponsoredTx(tx);
   res.json({ base64tx });
 }

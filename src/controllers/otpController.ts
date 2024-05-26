@@ -5,7 +5,7 @@ import { gasFeeSponsor } from "../services";
 export async function constructSetupOtpTx(req: Request, res: Response) {
   const { hyperWalletPda, hyperWalletOwnerAddress, initTime, root } = req.body;
 
-  const ix = await hyperWalletProgram.methods
+  const tx = await hyperWalletProgram.methods
     .setUpOtp({
       initTime,
       root: [...Buffer.from(root.data)],
@@ -14,8 +14,8 @@ export async function constructSetupOtpTx(req: Request, res: Response) {
       hyperWallet: hyperWalletPda,
       hyperWalletOwner: hyperWalletOwnerAddress,
     })
-    .instruction();
-  const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(ix);
+    .transaction();
+  const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(tx);
 
   res.json({ base64tx });
 }
@@ -23,14 +23,14 @@ export async function constructSetupOtpTx(req: Request, res: Response) {
 export async function constructEnableOtpTx(req: Request, res: Response) {
   const { hyperWalletPda, hyperWalletOwnerAddress } = req.body;
 
-  const ix = await hyperWalletProgram.methods
+  const tx = await hyperWalletProgram.methods
     .enableOtp()
     .accounts({
       hyperWallet: hyperWalletPda,
       hyperWalletOwner: hyperWalletOwnerAddress,
     })
-    .instruction();
-  const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(ix);
+    .transaction();
+  const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(tx);
 
   res.json({ base64tx });
 }
@@ -38,14 +38,14 @@ export async function constructEnableOtpTx(req: Request, res: Response) {
 export async function constructDisableOtpTx(req: Request, res: Response) {
   const { hyperWalletPda, hyperWalletOwnerAddress } = req.body;
 
-  const ix = await hyperWalletProgram.methods
+  const tx = await hyperWalletProgram.methods
     .disableOtp()
     .accounts({
       hyperWallet: hyperWalletPda,
       hyperWalletOwner: hyperWalletOwnerAddress,
     })
-    .instruction();
-  const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(ix);
+    .transaction();
+  const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(tx);
 
   res.json({ base64tx });
 }

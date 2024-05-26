@@ -50,23 +50,26 @@ export async function constructTransferSplTx(req: Request, res: Response) {
     true
   );
 
-  const ix = createTransferCheckedInstruction(
-    fromAta.address,
-    new PublicKey(tokenMintAddress),
-    toAta.address,
-    new PublicKey(fromAddress),
-    rawAmount,
-    6
+  const tx = new web3.Transaction();
+  tx.add(
+    createTransferCheckedInstruction(
+      fromAta.address,
+      new PublicKey(tokenMintAddress),
+      toAta.address,
+      new PublicKey(fromAddress),
+      rawAmount,
+      6
+    )
   );
+
   if (feeToken == "USDT") {
-    console.log("🚀 ~ constructTransferSplTx ~ feeToken:", feeToken);
     const { base64tx } = await gasFeeSponsor.createPayGasFeeWithUsdtTx(
-      ix,
+      tx,
       fromAddress
     );
     return res.json({ base64tx });
   } else {
-    const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(ix);
+    const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(tx);
     return res.json({ base64tx });
   }
 }
@@ -90,23 +93,26 @@ export async function constructTransferNftTx(req: Request, res: Response) {
     true
   );
 
-  const ix = createTransferCheckedInstruction(
-    fromAta.address,
-    new PublicKey(nftMintAddress),
-    toAta.address,
-    new PublicKey(fromAddress),
-    1, // Nft amount
-    0 // Nft decimals is always 0
+  const tx = new web3.Transaction();
+  tx.add(
+    createTransferCheckedInstruction(
+      fromAta.address,
+      new PublicKey(nftMintAddress),
+      toAta.address,
+      new PublicKey(fromAddress),
+      1, // Nft amount
+      0 // Nft decimals is always 0
+    )
   );
+
   if (feeToken == "USDT") {
-    console.log("🚀 ~ constructTransferSplTx ~ feeToken:", feeToken);
     const { base64tx } = await gasFeeSponsor.createPayGasFeeWithUsdtTx(
-      ix,
+      tx,
       fromAddress
     );
     return res.json({ base64tx });
   } else {
-    const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(ix);
+    const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(tx);
     return res.json({ base64tx });
   }
 }

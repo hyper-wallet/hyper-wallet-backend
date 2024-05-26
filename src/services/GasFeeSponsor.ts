@@ -6,6 +6,8 @@ import {
   getOrCreateAssociatedTokenAccount,
 } from "@solana/spl-token";
 
+const USDT_MINT_ADDRESS = "5oUHhQyq6wgq1HnbVf5Vr3Soxu5FNU1Jv2YeKPLopg7a";
+
 export class GasFeeSponsor {
   private _signer: web3.Keypair;
   private _network: INetwork;
@@ -23,9 +25,18 @@ export class GasFeeSponsor {
     return this._signer;
   }
 
-  async createFullySponsoredTx(instruction: web3.TransactionInstruction) {
-    const tx = new web3.Transaction();
-    tx.add(instruction);
+  async getUsdtAta() {
+    const ata = await getOrCreateAssociatedTokenAccount(
+      this._network.connection,
+      this._signer,
+      new web3.PublicKey(USDT_MINT_ADDRESS),
+      new web3.PublicKey(this.address),
+      true
+    );
+    return ata;
+  }
+
+  async createFullySponsoredTx(tx: web3.Transaction) {
     tx.feePayer = this.address;
     tx.recentBlockhash = await this._network.getRecentBlockhash();
     tx.partialSign(this._signer);
@@ -38,10 +49,9 @@ export class GasFeeSponsor {
   }
 
   async createPayGasFeeWithUsdtTx(
-    instruction: web3.TransactionInstruction,
+    tx: web3.Transaction,
     sponsoredAddress: string
   ) {
-    const USDT_MINT_ADDRESS = "5oUHhQyq6wgq1HnbVf5Vr3Soxu5FNU1Jv2YeKPLopg7a";
     const fromAta = await getOrCreateAssociatedTokenAccount(
       this._network.connection,
       this._signer,
@@ -56,7 +66,6 @@ export class GasFeeSponsor {
       this.address,
       true
     );
-    const tx = new web3.Transaction();
     const payGasFeeWithUsdtIx = createTransferCheckedInstruction(
       fromAta.address,
       new web3.PublicKey(USDT_MINT_ADDRESS),
@@ -66,7 +75,6 @@ export class GasFeeSponsor {
       6
     );
     tx.add(payGasFeeWithUsdtIx);
-    tx.add(instruction);
     tx.feePayer = this.address;
     tx.recentBlockhash = await this._network.getRecentBlockhash();
     tx.partialSign(this._signer);
