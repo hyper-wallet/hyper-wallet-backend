@@ -9,26 +9,32 @@ const walletTransactionSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  title: {
+  fromAddress: {
     type: String,
     require: true,
   },
-  subTitle: {
+  toAddress: {
+    type: String,
+    require: true,
+  },
+  token: {
+    iconUrl: {
+      type: String,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    symbol: {
+      type: String,
+      required: true,
+    },
+  },
+  amount: {
     type: String,
     require: true,
   },
   value: {
-    type: String,
-    require: true,
-  },
-  subValue: {
-    type: String,
-    require: true,
-  },
-  iconUrl: {
-    type: String,
-  },
-  walletAddress: {
     type: String,
     require: true,
   },

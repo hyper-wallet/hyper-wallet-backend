@@ -5,7 +5,7 @@ import { WalletTransactionModel } from "../models";
 export async function getWalletTokens(req: Request, res: Response) {
   const { address } = req.query;
   if (!address) {
-    return res.json({ error: "address is required" });
+    return res.json({ error: "Address is required" });
   }
 
   const tokenBalanceByAddressMap =
@@ -29,7 +29,7 @@ export async function getWalletTokens(req: Request, res: Response) {
 export async function getWalletNfts(req: Request, res: Response) {
   const { address } = req.query;
   if (!address) {
-    return res.json({ error: "address is required" });
+    return res.json({ error: "Address is required" });
   }
 
   const nfts = await getWalletAssetService().getNfts(address.toString());
@@ -42,7 +42,16 @@ export async function getWalletTransactions(req: Request, res: Response) {
     return res.json({ error: "Address is required" });
   }
 
-  WalletTransactionModel.find({ walletAddress: address })
+  WalletTransactionModel.find({
+    $or: [
+      {
+        fromAddress: address,
+      },
+      {
+        toAddress: address,
+      },
+    ],
+  })
     .then((transactions) => {
       return res.json({ transactions });
     })
@@ -50,29 +59,23 @@ export async function getWalletTransactions(req: Request, res: Response) {
 }
 
 export async function createWalletTransaction(req: Request, res: Response) {
-  const {
-    signature,
-    type,
-    title,
-    subTitle,
-    value,
-    subValue,
-    iconUrl,
-    walletAddress,
-  } = req.body;
+  const { signature, type, fromAddress, toAddress, token, amount, value } =
+    req.body;
 
   const newWalletTransaction = new WalletTransactionModel({
     signature,
     type,
-    title,
-    subTitle,
+    fromAddress,
+    toAddress,
+    token,
+    amount,
     value,
-    subValue,
-    iconUrl,
-    walletAddress,
   });
 
-  newWalletTransaction.save().then((transaction) => res.json({ transaction }));
+  newWalletTransaction
+    .save()
+    .then((transaction) => res.json({ transaction }))
+    .catch((e) => res.json({ error: e }));
 }
 
 //@ts-ignore
