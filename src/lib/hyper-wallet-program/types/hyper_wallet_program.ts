@@ -200,6 +200,27 @@ export type HyperWalletProgram = {
       ];
     },
     {
+      name: "verifyReceiver";
+      accounts: [
+        {
+          name: "hyperWallet";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "hyperWalletOwner";
+          isMut: false;
+          isSigner: true;
+        }
+      ];
+      args: [
+        {
+          name: "address";
+          type: "publicKey";
+        }
+      ];
+    },
+    {
       name: "enableOtp";
       accounts: [
         {
@@ -255,7 +276,7 @@ export type HyperWalletProgram = {
       ];
     },
     {
-      name: "confirmOtp";
+      name: "verifyOtp";
       accounts: [
         {
           name: "hyperWallet";
@@ -270,49 +291,12 @@ export type HyperWalletProgram = {
       ];
       args: [
         {
-          name: "confirmOtpParams";
+          name: "verifyOtpParams";
           type: {
-            defined: "ConfirmOtpParams";
+            defined: "VerifyOtpParams";
           };
         }
       ];
-    },
-    {
-      name: "setSpendingLimitLamports";
-      accounts: [
-        {
-          name: "hyperWallet";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "hyperWalletOwner";
-          isMut: false;
-          isSigner: true;
-        }
-      ];
-      args: [
-        {
-          name: "amount";
-          type: "u64";
-        }
-      ];
-    },
-    {
-      name: "removeSpendingLimitLamports";
-      accounts: [
-        {
-          name: "hyperWallet";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "hyperWalletOwner";
-          isMut: false;
-          isSigner: true;
-        }
-      ];
-      args: [];
     },
     {
       name: "setSpendingLimitSpl";
@@ -326,6 +310,11 @@ export type HyperWalletProgram = {
           name: "hyperWalletOwner";
           isMut: false;
           isSigner: true;
+        },
+        {
+          name: "ata";
+          isMut: false;
+          isSigner: false;
         }
       ];
       args: [
@@ -347,6 +336,11 @@ export type HyperWalletProgram = {
           name: "hyperWalletOwner";
           isMut: false;
           isSigner: true;
+        },
+        {
+          name: "ata";
+          isMut: false;
+          isSigner: false;
         }
       ];
       args: [];
@@ -422,7 +416,7 @@ export type HyperWalletProgram = {
       };
     },
     {
-      name: "ConfirmOtpParams";
+      name: "VerifyOtpParams";
       type: {
         kind: "struct";
         fields: [
@@ -517,11 +511,15 @@ export type HyperWalletProgram = {
             type: "u64";
           },
           {
-            name: "rawAllowanceLeft";
+            name: "totalSpent";
             type: "u64";
           },
           {
             name: "lastReset";
+            type: "i64";
+          },
+          {
+            name: "resetPeriod";
             type: "i64";
           }
         ];
@@ -766,6 +764,27 @@ export const IDL: HyperWalletProgram = {
       ],
     },
     {
+      name: "verifyReceiver",
+      accounts: [
+        {
+          name: "hyperWallet",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "hyperWalletOwner",
+          isMut: false,
+          isSigner: true,
+        },
+      ],
+      args: [
+        {
+          name: "address",
+          type: "publicKey",
+        },
+      ],
+    },
+    {
       name: "enableOtp",
       accounts: [
         {
@@ -821,7 +840,7 @@ export const IDL: HyperWalletProgram = {
       ],
     },
     {
-      name: "confirmOtp",
+      name: "verifyOtp",
       accounts: [
         {
           name: "hyperWallet",
@@ -836,49 +855,12 @@ export const IDL: HyperWalletProgram = {
       ],
       args: [
         {
-          name: "confirmOtpParams",
+          name: "verifyOtpParams",
           type: {
-            defined: "ConfirmOtpParams",
+            defined: "VerifyOtpParams",
           },
         },
       ],
-    },
-    {
-      name: "setSpendingLimitLamports",
-      accounts: [
-        {
-          name: "hyperWallet",
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: "hyperWalletOwner",
-          isMut: false,
-          isSigner: true,
-        },
-      ],
-      args: [
-        {
-          name: "amount",
-          type: "u64",
-        },
-      ],
-    },
-    {
-      name: "removeSpendingLimitLamports",
-      accounts: [
-        {
-          name: "hyperWallet",
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: "hyperWalletOwner",
-          isMut: false,
-          isSigner: true,
-        },
-      ],
-      args: [],
     },
     {
       name: "setSpendingLimitSpl",
@@ -892,6 +874,11 @@ export const IDL: HyperWalletProgram = {
           name: "hyperWalletOwner",
           isMut: false,
           isSigner: true,
+        },
+        {
+          name: "ata",
+          isMut: false,
+          isSigner: false,
         },
       ],
       args: [
@@ -913,6 +900,11 @@ export const IDL: HyperWalletProgram = {
           name: "hyperWalletOwner",
           isMut: false,
           isSigner: true,
+        },
+        {
+          name: "ata",
+          isMut: false,
+          isSigner: false,
         },
       ],
       args: [],
@@ -988,7 +980,7 @@ export const IDL: HyperWalletProgram = {
       },
     },
     {
-      name: "ConfirmOtpParams",
+      name: "VerifyOtpParams",
       type: {
         kind: "struct",
         fields: [
@@ -1083,11 +1075,15 @@ export const IDL: HyperWalletProgram = {
             type: "u64",
           },
           {
-            name: "rawAllowanceLeft",
+            name: "totalSpent",
             type: "u64",
           },
           {
             name: "lastReset",
+            type: "i64",
+          },
+          {
+            name: "resetPeriod",
             type: "i64",
           },
         ],

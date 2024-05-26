@@ -200,6 +200,27 @@
       ]
     },
     {
+      "name": "verifyReceiver",
+      "accounts": [
+        {
+          "name": "hyperWallet",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "hyperWalletOwner",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "address",
+          "type": "publicKey"
+        }
+      ]
+    },
+    {
       "name": "enableOtp",
       "accounts": [
         {
@@ -255,7 +276,7 @@
       ]
     },
     {
-      "name": "confirmOtp",
+      "name": "verifyOtp",
       "accounts": [
         {
           "name": "hyperWallet",
@@ -270,49 +291,12 @@
       ],
       "args": [
         {
-          "name": "confirmOtpParams",
+          "name": "verifyOtpParams",
           "type": {
-            "defined": "ConfirmOtpParams"
+            "defined": "VerifyOtpParams"
           }
         }
       ]
-    },
-    {
-      "name": "setSpendingLimitLamports",
-      "accounts": [
-        {
-          "name": "hyperWallet",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "hyperWalletOwner",
-          "isMut": false,
-          "isSigner": true
-        }
-      ],
-      "args": [
-        {
-          "name": "amount",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "removeSpendingLimitLamports",
-      "accounts": [
-        {
-          "name": "hyperWallet",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "hyperWalletOwner",
-          "isMut": false,
-          "isSigner": true
-        }
-      ],
-      "args": []
     },
     {
       "name": "setSpendingLimitSpl",
@@ -326,6 +310,11 @@
           "name": "hyperWalletOwner",
           "isMut": false,
           "isSigner": true
+        },
+        {
+          "name": "ata",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": [
@@ -347,6 +336,11 @@
           "name": "hyperWalletOwner",
           "isMut": false,
           "isSigner": true
+        },
+        {
+          "name": "ata",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": []
@@ -422,7 +416,7 @@
       }
     },
     {
-      "name": "ConfirmOtpParams",
+      "name": "VerifyOtpParams",
       "type": {
         "kind": "struct",
         "fields": [
@@ -517,11 +511,15 @@
             "type": "u64"
           },
           {
-            "name": "rawAllowanceLeft",
+            "name": "totalSpent",
             "type": "u64"
           },
           {
             "name": "lastReset",
+            "type": "i64"
+          },
+          {
+            "name": "resetPeriod",
             "type": "i64"
           }
         ]
