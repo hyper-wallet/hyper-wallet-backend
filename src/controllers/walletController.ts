@@ -52,6 +52,7 @@ export async function getWalletTransactions(req: Request, res: Response) {
       },
     ],
   })
+    .sort("-date")
     .then((transactions) => {
       return res.json({ transactions });
     })
