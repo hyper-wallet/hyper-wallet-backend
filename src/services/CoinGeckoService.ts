@@ -29,22 +29,27 @@ export class CoinGeckoService implements ITokenPriceService {
   ): Promise<Map<string, TokenPrice>> {
     const idByAddressMap = this.createIdByAddressMap(addresses);
     const tokenPriceByAddressMap = new Map<string, TokenPrice>();
-    const params = {
-      ids: Array.from(idByAddressMap.values()).join(","),
-      vs_currencies: "usd",
-      include_market_cap: true,
-      include_24hr_vol: true,
-      include_24hr_change: true,
-    };
-    const res = await this._apisauce.get("/simple/price", params);
-    const tokenPriceByIdMap = new Map(
-      Object.entries(res.data as unknown as any)
-    );
-    addresses.forEach((address) => {
-      const id = idByAddressMap.get(address) ?? "";
-      const price = tokenPriceByIdMap.get(id) as TokenPrice;
-      tokenPriceByAddressMap.set(address, price);
-    });
-    return tokenPriceByAddressMap;
+    try {
+      const params = {
+        ids: Array.from(idByAddressMap.values()).join(","),
+        vs_currencies: "usd",
+        include_market_cap: true,
+        include_24hr_vol: true,
+        include_24hr_change: true,
+      };
+      const res = await this._apisauce.get("/simple/price", params);
+      const tokenPriceByIdMap = new Map(
+        Object.entries(res.data as unknown as any)
+      );
+      addresses.forEach((address) => {
+        const id = idByAddressMap.get(address) ?? "";
+        const price = tokenPriceByIdMap.get(id) as TokenPrice;
+        tokenPriceByAddressMap.set(address, price);
+      });
+    } catch (error) {
+      console.log("🚀 ~ CoinGeckoService ~ error:", error);
+    } finally {
+      return tokenPriceByAddressMap;
+    }
   }
 }
