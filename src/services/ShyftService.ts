@@ -20,11 +20,10 @@ export class ShyftService implements IWalletAssetService {
   ): Promise<Map<string, TokenBalance>> {
     const tokenBalanceByAddress = new Map();
     try {
-      const solBalance =
-        (await this._shyft.wallet.getBalance({
-          network: Network.Devnet,
-          wallet: walletAddress,
-        })) / LAMPORTS_PER_SOL;
+      const solBalance = await this._shyft.wallet.getBalance({
+        network: Network.Devnet,
+        wallet: walletAddress,
+      });
       const solMetadata = {
         mint_address: "So11111111111111111111111111111111111111111",
         name: "Solana",

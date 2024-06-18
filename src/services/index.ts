@@ -14,6 +14,7 @@ const devnetAddressToCoinGeckoId = {
   "9dB35ynAwActVvEPNQBSaiKqiT3KdyG7dMJWyj5RHoou": "stepn",
   "3ZatmBQoWaP2b87hAAZFmVZpWjhqsanLXb7qnZFcYf49": "jupiter-exchange-solana",
   GtWrEZvmTbLonQWXfnGyc36c6r9qwtE3yYCPPFzsfgFa: "coin98",
+  So11111111111111111111111111111111111111111: "solana",
 };
 
 let coinGeckoService: CoinGeckoService;
