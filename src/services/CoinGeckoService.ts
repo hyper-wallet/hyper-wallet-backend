@@ -38,6 +38,7 @@ export class CoinGeckoService implements ITokenPriceService {
         include_24hr_change: true,
       };
       const res = await this._apisauce.get("/simple/price", params);
+      console.log("🚀 ~ CoinGeckoService ~ res:", res.data);
       const tokenPriceByIdMap = new Map(
         Object.entries(res.data as unknown as any)
       );
