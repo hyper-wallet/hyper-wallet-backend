@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.constructHyperTransferNftTx = exports.constructHyperTransferSplTx = exports.constructHyperTransferLamportsTx = exports.constructCloseHyperWalletTx = exports.constructCreateHyperWalletTx = exports.getHyperWalletAccount = void 0;
+exports.constructHyperTransferNftTx = exports.constructHyperTransferSplTx = exports.constructHyperTransferLamportsTx = exports.constructHyperChangeApproverTx = exports.constructCloseHyperWalletTx = exports.constructCreateHyperWalletTx = exports.getHyperWalletAccount = void 0;
 const hyper_wallet_program_1 = require("../lib/hyper-wallet-program");
 const anchor_1 = require("@coral-xyz/anchor");
 const spl_token_1 = require("@solana/spl-token");
@@ -74,6 +74,30 @@ function constructCloseHyperWalletTx(req, res) {
     });
 }
 exports.constructCloseHyperWalletTx = constructCloseHyperWalletTx;
+function constructHyperChangeApproverTx(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { hyperWalletPda, ownerAddress, newApprover, approver } = req.body;
+        const tx = new anchor_1.web3.Transaction();
+        tx.add(yield hyper_wallet_program_1.hyperWalletProgram.methods
+            .changeApprover(new web3_js_1.PublicKey(newApprover))
+            .accounts({
+            hyperWallet: hyperWalletPda,
+            owner: ownerAddress,
+            approver: approver,
+        })
+            .instruction());
+        tx.feePayer = services_1.gasFeeSponsor.address;
+        tx.recentBlockhash = yield services_1.network.getRecentBlockhash();
+        tx.partialSign(services_1.gasFeeSponsor.signer);
+        const serializedTx = tx.serialize({
+            verifySignatures: true,
+            requireAllSignatures: false,
+        });
+        const base64tx = serializedTx.toString("base64");
+        res.json({ base64tx });
+    });
+}
+exports.constructHyperChangeApproverTx = constructHyperChangeApproverTx;
 function constructHyperTransferLamportsTx(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { fromHyperWalletPda, hyperWalletOwnerAddress, toAddress, lamports, approverAddress, } = req.body;

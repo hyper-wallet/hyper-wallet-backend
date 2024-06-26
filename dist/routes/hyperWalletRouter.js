@@ -13,6 +13,7 @@ hyperWalletRouter.post("/tx/close-hyper-wallet", hyperWalletController_1.constru
 hyperWalletRouter.post("/tx/transfer-lamports", hyperWalletController_1.constructHyperTransferLamportsTx);
 hyperWalletRouter.post("/tx/transfer-spl", hyperWalletController_1.constructHyperTransferSplTx);
 hyperWalletRouter.post("/tx/transfer-nft", hyperWalletController_1.constructHyperTransferNftTx);
+hyperWalletRouter.post("/tx/change-approver", hyperWalletController_1.constructHyperChangeApproverTx);
 hyperWalletRouter.post("/tx/whitelist/enable", whitelistController_1.constructEnableWhitelistTx);
 hyperWalletRouter.post("/tx/whitelist/disable", whitelistController_1.constructDisableWhitelistTx);
 hyperWalletRouter.post("/tx/whitelist/add", whitelistController_1.constructAddToWhitelistTx);

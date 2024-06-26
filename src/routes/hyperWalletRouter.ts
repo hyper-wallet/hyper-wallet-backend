@@ -3,6 +3,7 @@ import express from "express";
 import {
   constructCloseHyperWalletTx,
   constructCreateHyperWalletTx,
+  constructHyperChangeApproverTx,
   constructHyperTransferLamportsTx,
   constructHyperTransferNftTx,
   constructHyperTransferSplTx,
@@ -23,10 +24,12 @@ hyperWalletRouter.post("/tx/close-hyper-wallet", constructCloseHyperWalletTx);
 
 hyperWalletRouter.post(
   "/tx/transfer-lamports",
-  constructHyperTransferLamportsTx,
+  constructHyperTransferLamportsTx
 );
 hyperWalletRouter.post("/tx/transfer-spl", constructHyperTransferSplTx);
 hyperWalletRouter.post("/tx/transfer-nft", constructHyperTransferNftTx);
+
+hyperWalletRouter.post("/tx/change-approver", constructHyperChangeApproverTx);
 
 hyperWalletRouter.post("/tx/whitelist/enable", constructEnableWhitelistTx);
 hyperWalletRouter.post("/tx/whitelist/disable", constructDisableWhitelistTx);

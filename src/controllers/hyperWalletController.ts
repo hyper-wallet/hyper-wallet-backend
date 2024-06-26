@@ -74,6 +74,34 @@ export async function constructCloseHyperWalletTx(req: Request, res: Response) {
   res.json({ base64tx });
 }
 
+export async function constructHyperChangeApproverTx(
+  req: Request,
+  res: Response
+) {
+  const { hyperWalletPda, ownerAddress, newApprover, approver } = req.body;
+
+  const tx = new web3.Transaction();
+  tx.add(
+    await hyperWalletProgram.methods
+      .changeApprover(new PublicKey(newApprover))
+      .accounts({
+        hyperWallet: hyperWalletPda,
+        owner: ownerAddress,
+        approver: approver,
+      })
+      .instruction()
+  );
+  tx.feePayer = gasFeeSponsor.address;
+  tx.recentBlockhash = await network.getRecentBlockhash();
+  tx.partialSign(gasFeeSponsor.signer);
+  const serializedTx = tx.serialize({
+    verifySignatures: true,
+    requireAllSignatures: false,
+  });
+  const base64tx = serializedTx.toString("base64");
+  res.json({ base64tx });
+}
+
 export async function constructHyperTransferLamportsTx(
   req: Request,
   res: Response

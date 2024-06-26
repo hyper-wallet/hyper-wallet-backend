@@ -57,6 +57,37 @@ export type HyperWalletProgram = {
       args: [];
     },
     {
+      name: "changeApprover";
+      accounts: [
+        {
+          name: "hyperWallet";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "owner";
+          isMut: false;
+          isSigner: true;
+        },
+        {
+          name: "approver";
+          isMut: false;
+          isSigner: true;
+        },
+        {
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [
+        {
+          name: "newApprover";
+          type: "publicKey";
+        }
+      ];
+    },
+    {
       name: "transferLamports";
       accounts: [
         {
@@ -690,6 +721,37 @@ export const IDL: HyperWalletProgram = {
         },
       ],
       args: [],
+    },
+    {
+      name: "changeApprover",
+      accounts: [
+        {
+          name: "hyperWallet",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "owner",
+          isMut: false,
+          isSigner: true,
+        },
+        {
+          name: "approver",
+          isMut: false,
+          isSigner: true,
+        },
+        {
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: "newApprover",
+          type: "publicKey",
+        },
+      ],
     },
     {
       name: "transferLamports",
