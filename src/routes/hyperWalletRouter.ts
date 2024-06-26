@@ -9,11 +9,6 @@ import {
   getHyperWalletAccount,
 } from "../controllers/hyperWalletController";
 import {
-  constructDisableOtpTx,
-  constructEnableOtpTx,
-  constructSetupOtpTx,
-} from "../controllers/otpController";
-import {
   constructAddToWhitelistTx,
   constructDisableWhitelistTx,
   constructEnableWhitelistTx,
@@ -28,14 +23,10 @@ hyperWalletRouter.post("/tx/close-hyper-wallet", constructCloseHyperWalletTx);
 
 hyperWalletRouter.post(
   "/tx/transfer-lamports",
-  constructHyperTransferLamportsTx
+  constructHyperTransferLamportsTx,
 );
 hyperWalletRouter.post("/tx/transfer-spl", constructHyperTransferSplTx);
 hyperWalletRouter.post("/tx/transfer-nft", constructHyperTransferNftTx);
-
-hyperWalletRouter.post("/tx/otp/set-up", constructSetupOtpTx);
-hyperWalletRouter.post("/tx/otp/enable", constructEnableOtpTx);
-hyperWalletRouter.post("/tx/otp/disable", constructDisableOtpTx);
 
 hyperWalletRouter.post("/tx/whitelist/enable", constructEnableWhitelistTx);
 hyperWalletRouter.post("/tx/whitelist/disable", constructDisableWhitelistTx);

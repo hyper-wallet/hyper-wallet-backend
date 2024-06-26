@@ -26,7 +26,14 @@ export type HyperWalletProgram = {
           isSigner: false;
         }
       ];
-      args: [];
+      args: [
+        {
+          name: "approvers";
+          type: {
+            vec: "publicKey";
+          };
+        }
+      ];
     },
     {
       name: "closeHyperWallet";
@@ -53,7 +60,7 @@ export type HyperWalletProgram = {
       name: "transferLamports";
       accounts: [
         {
-          name: "fromHyperWallet";
+          name: "hyperWallet";
           isMut: true;
           isSigner: false;
         },
@@ -63,7 +70,12 @@ export type HyperWalletProgram = {
           isSigner: false;
         },
         {
-          name: "hyperWalletOwner";
+          name: "owner";
+          isMut: false;
+          isSigner: true;
+        },
+        {
+          name: "approver";
           isMut: false;
           isSigner: true;
         },
@@ -75,10 +87,8 @@ export type HyperWalletProgram = {
       ];
       args: [
         {
-          name: "params";
-          type: {
-            defined: "TransferLamportsParams";
-          };
+          name: "lamports";
+          type: "u64";
         }
       ];
     },
@@ -86,12 +96,12 @@ export type HyperWalletProgram = {
       name: "transferSpl";
       accounts: [
         {
-          name: "fromHyperWallet";
+          name: "hyperWallet";
           isMut: true;
           isSigner: false;
         },
         {
-          name: "fromHyperWalletAta";
+          name: "fromAta";
           isMut: true;
           isSigner: false;
         },
@@ -106,213 +116,17 @@ export type HyperWalletProgram = {
           isSigner: false;
         },
         {
-          name: "hyperWalletOwner";
+          name: "owner";
+          isMut: false;
+          isSigner: true;
+        },
+        {
+          name: "approver";
           isMut: false;
           isSigner: true;
         },
         {
           name: "tokenProgram";
-          isMut: false;
-          isSigner: false;
-        }
-      ];
-      args: [
-        {
-          name: "params";
-          type: {
-            defined: "TransferSplParams";
-          };
-        }
-      ];
-    },
-    {
-      name: "enableWhitelist";
-      accounts: [
-        {
-          name: "hyperWallet";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "hyperWalletOwner";
-          isMut: false;
-          isSigner: true;
-        }
-      ];
-      args: [];
-    },
-    {
-      name: "disableWhitelist";
-      accounts: [
-        {
-          name: "hyperWallet";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "hyperWalletOwner";
-          isMut: false;
-          isSigner: true;
-        }
-      ];
-      args: [];
-    },
-    {
-      name: "addToWhitelist";
-      accounts: [
-        {
-          name: "hyperWallet";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "hyperWalletOwner";
-          isMut: false;
-          isSigner: true;
-        }
-      ];
-      args: [
-        {
-          name: "address";
-          type: "publicKey";
-        }
-      ];
-    },
-    {
-      name: "removeFromWhitelist";
-      accounts: [
-        {
-          name: "hyperWallet";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "hyperWalletOwner";
-          isMut: false;
-          isSigner: true;
-        }
-      ];
-      args: [
-        {
-          name: "address";
-          type: "publicKey";
-        }
-      ];
-    },
-    {
-      name: "verifyReceiver";
-      accounts: [
-        {
-          name: "hyperWallet";
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: "hyperWalletOwner";
-          isMut: false;
-          isSigner: true;
-        }
-      ];
-      args: [
-        {
-          name: "address";
-          type: "publicKey";
-        }
-      ];
-    },
-    {
-      name: "enableOtp";
-      accounts: [
-        {
-          name: "hyperWallet";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "hyperWalletOwner";
-          isMut: false;
-          isSigner: true;
-        }
-      ];
-      args: [];
-    },
-    {
-      name: "disableOtp";
-      accounts: [
-        {
-          name: "hyperWallet";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "hyperWalletOwner";
-          isMut: false;
-          isSigner: true;
-        }
-      ];
-      args: [];
-    },
-    {
-      name: "setUpOtp";
-      accounts: [
-        {
-          name: "hyperWallet";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "hyperWalletOwner";
-          isMut: false;
-          isSigner: true;
-        }
-      ];
-      args: [
-        {
-          name: "setUpOtpParams";
-          type: {
-            defined: "SetUpOtpParams";
-          };
-        }
-      ];
-    },
-    {
-      name: "verifyOtp";
-      accounts: [
-        {
-          name: "hyperWallet";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "hyperWalletOwner";
-          isMut: false;
-          isSigner: true;
-        }
-      ];
-      args: [
-        {
-          name: "verifyOtpParams";
-          type: {
-            defined: "VerifyOtpParams";
-          };
-        }
-      ];
-    },
-    {
-      name: "setSpendingLimitSpl";
-      accounts: [
-        {
-          name: "hyperWallet";
-          isMut: true;
-          isSigner: false;
-        },
-        {
-          name: "hyperWalletOwner";
-          isMut: false;
-          isSigner: true;
-        },
-        {
-          name: "ata";
           isMut: false;
           isSigner: false;
         }
@@ -325,20 +139,197 @@ export type HyperWalletProgram = {
       ];
     },
     {
-      name: "removeSpendingLimitSpl";
+      name: "createTransferLamportsProposal";
       accounts: [
         {
-          name: "hyperWallet";
-          isMut: true;
+          name: "hyperBusinessWallet";
+          isMut: false;
           isSigner: false;
         },
         {
-          name: "hyperWalletOwner";
+          name: "proposal";
+          isMut: true;
+          isSigner: true;
+        },
+        {
+          name: "rentPayer";
+          isMut: true;
+          isSigner: true;
+        },
+        {
+          name: "owner";
           isMut: false;
           isSigner: true;
         },
         {
-          name: "ata";
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [
+        {
+          name: "to";
+          type: "publicKey";
+        },
+        {
+          name: "lamports";
+          type: "u64";
+        }
+      ];
+    },
+    {
+      name: "approveTransferLamportsProposal";
+      accounts: [
+        {
+          name: "hyperBusinessWallet";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "proposal";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "voter";
+          isMut: false;
+          isSigner: true;
+        },
+        {
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [];
+    },
+    {
+      name: "executeTransferLamportsProposal";
+      accounts: [
+        {
+          name: "hyperBusinessWallet";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "proposal";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "to";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [];
+    },
+    {
+      name: "createTransferSplProposal";
+      accounts: [
+        {
+          name: "hyperBusinessWallet";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "proposal";
+          isMut: true;
+          isSigner: true;
+        },
+        {
+          name: "rentPayer";
+          isMut: true;
+          isSigner: true;
+        },
+        {
+          name: "owner";
+          isMut: false;
+          isSigner: true;
+        },
+        {
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [
+        {
+          name: "fromAta";
+          type: "publicKey";
+        },
+        {
+          name: "toAta";
+          type: "publicKey";
+        },
+        {
+          name: "rawAmount";
+          type: "u64";
+        }
+      ];
+    },
+    {
+      name: "approveTransferSplProposal";
+      accounts: [
+        {
+          name: "hyperBusinessWallet";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "proposal";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "voter";
+          isMut: false;
+          isSigner: true;
+        },
+        {
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [];
+    },
+    {
+      name: "executeTransferSplProposal";
+      accounts: [
+        {
+          name: "hyperBusinessWallet";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "proposal";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "fromAta";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "toAta";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "owner";
+          isMut: false;
+          isSigner: true;
+        },
+        {
+          name: "tokenProgram";
           isMut: false;
           isSigner: false;
         }
@@ -347,6 +338,32 @@ export type HyperWalletProgram = {
     }
   ];
   accounts: [
+    {
+      name: "hyperBusinessWallet";
+      type: {
+        kind: "struct";
+        fields: [
+          {
+            name: "creator";
+            type: "publicKey";
+          },
+          {
+            name: "members";
+            type: {
+              vec: "publicKey";
+            };
+          },
+          {
+            name: "threshold";
+            type: "u8";
+          },
+          {
+            name: "bump";
+            type: "u8";
+          }
+        ];
+      };
+    },
     {
       name: "hyperWallet";
       type: {
@@ -357,38 +374,108 @@ export type HyperWalletProgram = {
             type: "publicKey";
           },
           {
-            name: "whitelistEnabled";
-            type: "bool";
+            name: "approvers";
+            type: {
+              vec: "publicKey";
+            };
+          }
+        ];
+      };
+    },
+    {
+      name: "transferLamportProposal";
+      type: {
+        kind: "struct";
+        fields: [
+          {
+            name: "hyperBusinessWallet";
+            type: "publicKey";
           },
           {
-            name: "whitelistedAddresses";
+            name: "approved";
             type: {
               vec: "publicKey";
             };
           },
           {
-            name: "otpEnabled";
-            type: "bool";
-          },
-          {
-            name: "otpRoot";
+            name: "status";
             type: {
-              array: ["u8", 32];
+              defined: "ProposalStatus";
             };
           },
           {
-            name: "otpInitTime";
-            type: "u32";
+            name: "to";
+            type: "publicKey";
           },
           {
-            name: "spendingLimitEnabled";
-            type: "bool";
+            name: "lamports";
+            type: "u64";
+          }
+        ];
+      };
+    },
+    {
+      name: "transferSplProposal";
+      type: {
+        kind: "struct";
+        fields: [
+          {
+            name: "hyperBusinessWallet";
+            type: "publicKey";
           },
           {
-            name: "spendingLimits";
+            name: "approved";
+            type: {
+              vec: "publicKey";
+            };
+          },
+          {
+            name: "status";
+            type: {
+              defined: "ProposalStatus";
+            };
+          },
+          {
+            name: "fromAta";
+            type: "publicKey";
+          },
+          {
+            name: "toAta";
+            type: "publicKey";
+          },
+          {
+            name: "rawAmount";
+            type: "u64";
+          }
+        ];
+      };
+    },
+    {
+      name: "configProposal";
+      type: {
+        kind: "struct";
+        fields: [
+          {
+            name: "hyperBusinessWallet";
+            type: "publicKey";
+          },
+          {
+            name: "approved";
+            type: {
+              vec: "publicKey";
+            };
+          },
+          {
+            name: "status";
+            type: {
+              defined: "ProposalStatus";
+            };
+          },
+          {
+            name: "actions";
             type: {
               vec: {
-                defined: "SpendingLimit";
+                defined: "ConfigAction";
               };
             };
           }
@@ -398,39 +485,15 @@ export type HyperWalletProgram = {
   ];
   types: [
     {
-      name: "SetUpOtpParams";
+      name: "CreateConfigProposalArgs";
       type: {
         kind: "struct";
         fields: [
           {
-            name: "initTime";
-            type: "u32";
-          },
-          {
-            name: "root";
-            type: {
-              array: ["u8", 32];
-            };
-          }
-        ];
-      };
-    },
-    {
-      name: "VerifyOtpParams";
-      type: {
-        kind: "struct";
-        fields: [
-          {
-            name: "otpHash";
-            type: {
-              array: ["u8", 32];
-            };
-          },
-          {
-            name: "proofHash";
+            name: "actions";
             type: {
               vec: {
-                array: ["u8", 32];
+                defined: "ConfigAction";
               };
             };
           }
@@ -445,82 +508,86 @@ export type HyperWalletProgram = {
           {
             name: "lamports";
             type: "u64";
-          },
-          {
-            name: "otpHash";
-            type: {
-              option: {
-                array: ["u8", 32];
-              };
-            };
-          },
-          {
-            name: "proofHash";
-            type: {
-              option: {
-                vec: {
-                  array: ["u8", 32];
-                };
-              };
-            };
           }
         ];
       };
     },
     {
-      name: "TransferSplParams";
+      name: "HyperBusinessWalletError";
       type: {
-        kind: "struct";
-        fields: [
+        kind: "enum";
+        variants: [
           {
-            name: "rawAmount";
-            type: "u64";
-          },
-          {
-            name: "otpHash";
-            type: {
-              option: {
-                array: ["u8", 32];
-              };
-            };
-          },
-          {
-            name: "proofHash";
-            type: {
-              option: {
-                vec: {
-                  array: ["u8", 32];
-                };
-              };
-            };
+            name: "NotAMember";
           }
         ];
       };
     },
     {
-      name: "SpendingLimit";
+      name: "ProposalStatus";
       type: {
-        kind: "struct";
-        fields: [
+        kind: "enum";
+        variants: [
           {
-            name: "ata";
-            type: "publicKey";
+            name: "Active";
           },
           {
-            name: "rawAmount";
-            type: "u64";
+            name: "Approved";
           },
           {
-            name: "totalSpent";
-            type: "u64";
+            name: "Executed";
+          }
+        ];
+      };
+    },
+    {
+      name: "ProposalError";
+      type: {
+        kind: "enum";
+        variants: [
+          {
+            name: "AlreadyApproved";
           },
           {
-            name: "lastReset";
-            type: "i64";
+            name: "NotApproved";
           },
           {
-            name: "resetPeriod";
-            type: "i64";
+            name: "InvalidRecipient";
+          }
+        ];
+      };
+    },
+    {
+      name: "ConfigAction";
+      type: {
+        kind: "enum";
+        variants: [
+          {
+            name: "AddMember";
+            fields: [
+              {
+                name: "newMember";
+                type: "publicKey";
+              }
+            ];
+          },
+          {
+            name: "RemoveMember";
+            fields: [
+              {
+                name: "oldMember";
+                type: "publicKey";
+              }
+            ];
+          },
+          {
+            name: "ChangeThreshold";
+            fields: [
+              {
+                name: "newThreshold";
+                type: "u8";
+              }
+            ];
           }
         ];
       };
@@ -558,6 +625,10 @@ export type HyperWalletProgram = {
     {
       code: 6007;
       name: "SpendingLimitExceeded";
+    },
+    {
+      code: 6008;
+      name: "InvalidApprover";
     }
   ];
 };
@@ -590,7 +661,14 @@ export const IDL: HyperWalletProgram = {
           isSigner: false,
         },
       ],
-      args: [],
+      args: [
+        {
+          name: "approvers",
+          type: {
+            vec: "publicKey",
+          },
+        },
+      ],
     },
     {
       name: "closeHyperWallet",
@@ -617,7 +695,7 @@ export const IDL: HyperWalletProgram = {
       name: "transferLamports",
       accounts: [
         {
-          name: "fromHyperWallet",
+          name: "hyperWallet",
           isMut: true,
           isSigner: false,
         },
@@ -627,7 +705,12 @@ export const IDL: HyperWalletProgram = {
           isSigner: false,
         },
         {
-          name: "hyperWalletOwner",
+          name: "owner",
+          isMut: false,
+          isSigner: true,
+        },
+        {
+          name: "approver",
           isMut: false,
           isSigner: true,
         },
@@ -639,10 +722,8 @@ export const IDL: HyperWalletProgram = {
       ],
       args: [
         {
-          name: "params",
-          type: {
-            defined: "TransferLamportsParams",
-          },
+          name: "lamports",
+          type: "u64",
         },
       ],
     },
@@ -650,12 +731,12 @@ export const IDL: HyperWalletProgram = {
       name: "transferSpl",
       accounts: [
         {
-          name: "fromHyperWallet",
+          name: "hyperWallet",
           isMut: true,
           isSigner: false,
         },
         {
-          name: "fromHyperWalletAta",
+          name: "fromAta",
           isMut: true,
           isSigner: false,
         },
@@ -670,213 +751,17 @@ export const IDL: HyperWalletProgram = {
           isSigner: false,
         },
         {
-          name: "hyperWalletOwner",
+          name: "owner",
+          isMut: false,
+          isSigner: true,
+        },
+        {
+          name: "approver",
           isMut: false,
           isSigner: true,
         },
         {
           name: "tokenProgram",
-          isMut: false,
-          isSigner: false,
-        },
-      ],
-      args: [
-        {
-          name: "params",
-          type: {
-            defined: "TransferSplParams",
-          },
-        },
-      ],
-    },
-    {
-      name: "enableWhitelist",
-      accounts: [
-        {
-          name: "hyperWallet",
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: "hyperWalletOwner",
-          isMut: false,
-          isSigner: true,
-        },
-      ],
-      args: [],
-    },
-    {
-      name: "disableWhitelist",
-      accounts: [
-        {
-          name: "hyperWallet",
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: "hyperWalletOwner",
-          isMut: false,
-          isSigner: true,
-        },
-      ],
-      args: [],
-    },
-    {
-      name: "addToWhitelist",
-      accounts: [
-        {
-          name: "hyperWallet",
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: "hyperWalletOwner",
-          isMut: false,
-          isSigner: true,
-        },
-      ],
-      args: [
-        {
-          name: "address",
-          type: "publicKey",
-        },
-      ],
-    },
-    {
-      name: "removeFromWhitelist",
-      accounts: [
-        {
-          name: "hyperWallet",
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: "hyperWalletOwner",
-          isMut: false,
-          isSigner: true,
-        },
-      ],
-      args: [
-        {
-          name: "address",
-          type: "publicKey",
-        },
-      ],
-    },
-    {
-      name: "verifyReceiver",
-      accounts: [
-        {
-          name: "hyperWallet",
-          isMut: false,
-          isSigner: false,
-        },
-        {
-          name: "hyperWalletOwner",
-          isMut: false,
-          isSigner: true,
-        },
-      ],
-      args: [
-        {
-          name: "address",
-          type: "publicKey",
-        },
-      ],
-    },
-    {
-      name: "enableOtp",
-      accounts: [
-        {
-          name: "hyperWallet",
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: "hyperWalletOwner",
-          isMut: false,
-          isSigner: true,
-        },
-      ],
-      args: [],
-    },
-    {
-      name: "disableOtp",
-      accounts: [
-        {
-          name: "hyperWallet",
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: "hyperWalletOwner",
-          isMut: false,
-          isSigner: true,
-        },
-      ],
-      args: [],
-    },
-    {
-      name: "setUpOtp",
-      accounts: [
-        {
-          name: "hyperWallet",
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: "hyperWalletOwner",
-          isMut: false,
-          isSigner: true,
-        },
-      ],
-      args: [
-        {
-          name: "setUpOtpParams",
-          type: {
-            defined: "SetUpOtpParams",
-          },
-        },
-      ],
-    },
-    {
-      name: "verifyOtp",
-      accounts: [
-        {
-          name: "hyperWallet",
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: "hyperWalletOwner",
-          isMut: false,
-          isSigner: true,
-        },
-      ],
-      args: [
-        {
-          name: "verifyOtpParams",
-          type: {
-            defined: "VerifyOtpParams",
-          },
-        },
-      ],
-    },
-    {
-      name: "setSpendingLimitSpl",
-      accounts: [
-        {
-          name: "hyperWallet",
-          isMut: true,
-          isSigner: false,
-        },
-        {
-          name: "hyperWalletOwner",
-          isMut: false,
-          isSigner: true,
-        },
-        {
-          name: "ata",
           isMut: false,
           isSigner: false,
         },
@@ -889,20 +774,197 @@ export const IDL: HyperWalletProgram = {
       ],
     },
     {
-      name: "removeSpendingLimitSpl",
+      name: "createTransferLamportsProposal",
       accounts: [
         {
-          name: "hyperWallet",
-          isMut: true,
+          name: "hyperBusinessWallet",
+          isMut: false,
           isSigner: false,
         },
         {
-          name: "hyperWalletOwner",
+          name: "proposal",
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: "rentPayer",
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: "owner",
           isMut: false,
           isSigner: true,
         },
         {
-          name: "ata",
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: "to",
+          type: "publicKey",
+        },
+        {
+          name: "lamports",
+          type: "u64",
+        },
+      ],
+    },
+    {
+      name: "approveTransferLamportsProposal",
+      accounts: [
+        {
+          name: "hyperBusinessWallet",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "proposal",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "voter",
+          isMut: false,
+          isSigner: true,
+        },
+        {
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [],
+    },
+    {
+      name: "executeTransferLamportsProposal",
+      accounts: [
+        {
+          name: "hyperBusinessWallet",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "proposal",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "to",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [],
+    },
+    {
+      name: "createTransferSplProposal",
+      accounts: [
+        {
+          name: "hyperBusinessWallet",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "proposal",
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: "rentPayer",
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: "owner",
+          isMut: false,
+          isSigner: true,
+        },
+        {
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: "fromAta",
+          type: "publicKey",
+        },
+        {
+          name: "toAta",
+          type: "publicKey",
+        },
+        {
+          name: "rawAmount",
+          type: "u64",
+        },
+      ],
+    },
+    {
+      name: "approveTransferSplProposal",
+      accounts: [
+        {
+          name: "hyperBusinessWallet",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "proposal",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "voter",
+          isMut: false,
+          isSigner: true,
+        },
+        {
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [],
+    },
+    {
+      name: "executeTransferSplProposal",
+      accounts: [
+        {
+          name: "hyperBusinessWallet",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "proposal",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "fromAta",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "toAta",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "owner",
+          isMut: false,
+          isSigner: true,
+        },
+        {
+          name: "tokenProgram",
           isMut: false,
           isSigner: false,
         },
@@ -911,6 +973,32 @@ export const IDL: HyperWalletProgram = {
     },
   ],
   accounts: [
+    {
+      name: "hyperBusinessWallet",
+      type: {
+        kind: "struct",
+        fields: [
+          {
+            name: "creator",
+            type: "publicKey",
+          },
+          {
+            name: "members",
+            type: {
+              vec: "publicKey",
+            },
+          },
+          {
+            name: "threshold",
+            type: "u8",
+          },
+          {
+            name: "bump",
+            type: "u8",
+          },
+        ],
+      },
+    },
     {
       name: "hyperWallet",
       type: {
@@ -921,38 +1009,108 @@ export const IDL: HyperWalletProgram = {
             type: "publicKey",
           },
           {
-            name: "whitelistEnabled",
-            type: "bool",
+            name: "approvers",
+            type: {
+              vec: "publicKey",
+            },
+          },
+        ],
+      },
+    },
+    {
+      name: "transferLamportProposal",
+      type: {
+        kind: "struct",
+        fields: [
+          {
+            name: "hyperBusinessWallet",
+            type: "publicKey",
           },
           {
-            name: "whitelistedAddresses",
+            name: "approved",
             type: {
               vec: "publicKey",
             },
           },
           {
-            name: "otpEnabled",
-            type: "bool",
-          },
-          {
-            name: "otpRoot",
+            name: "status",
             type: {
-              array: ["u8", 32],
+              defined: "ProposalStatus",
             },
           },
           {
-            name: "otpInitTime",
-            type: "u32",
+            name: "to",
+            type: "publicKey",
           },
           {
-            name: "spendingLimitEnabled",
-            type: "bool",
+            name: "lamports",
+            type: "u64",
+          },
+        ],
+      },
+    },
+    {
+      name: "transferSplProposal",
+      type: {
+        kind: "struct",
+        fields: [
+          {
+            name: "hyperBusinessWallet",
+            type: "publicKey",
           },
           {
-            name: "spendingLimits",
+            name: "approved",
+            type: {
+              vec: "publicKey",
+            },
+          },
+          {
+            name: "status",
+            type: {
+              defined: "ProposalStatus",
+            },
+          },
+          {
+            name: "fromAta",
+            type: "publicKey",
+          },
+          {
+            name: "toAta",
+            type: "publicKey",
+          },
+          {
+            name: "rawAmount",
+            type: "u64",
+          },
+        ],
+      },
+    },
+    {
+      name: "configProposal",
+      type: {
+        kind: "struct",
+        fields: [
+          {
+            name: "hyperBusinessWallet",
+            type: "publicKey",
+          },
+          {
+            name: "approved",
+            type: {
+              vec: "publicKey",
+            },
+          },
+          {
+            name: "status",
+            type: {
+              defined: "ProposalStatus",
+            },
+          },
+          {
+            name: "actions",
             type: {
               vec: {
-                defined: "SpendingLimit",
+                defined: "ConfigAction",
               },
             },
           },
@@ -962,39 +1120,15 @@ export const IDL: HyperWalletProgram = {
   ],
   types: [
     {
-      name: "SetUpOtpParams",
+      name: "CreateConfigProposalArgs",
       type: {
         kind: "struct",
         fields: [
           {
-            name: "initTime",
-            type: "u32",
-          },
-          {
-            name: "root",
-            type: {
-              array: ["u8", 32],
-            },
-          },
-        ],
-      },
-    },
-    {
-      name: "VerifyOtpParams",
-      type: {
-        kind: "struct",
-        fields: [
-          {
-            name: "otpHash",
-            type: {
-              array: ["u8", 32],
-            },
-          },
-          {
-            name: "proofHash",
+            name: "actions",
             type: {
               vec: {
-                array: ["u8", 32],
+                defined: "ConfigAction",
               },
             },
           },
@@ -1010,81 +1144,85 @@ export const IDL: HyperWalletProgram = {
             name: "lamports",
             type: "u64",
           },
+        ],
+      },
+    },
+    {
+      name: "HyperBusinessWalletError",
+      type: {
+        kind: "enum",
+        variants: [
           {
-            name: "otpHash",
-            type: {
-              option: {
-                array: ["u8", 32],
-              },
-            },
-          },
-          {
-            name: "proofHash",
-            type: {
-              option: {
-                vec: {
-                  array: ["u8", 32],
-                },
-              },
-            },
+            name: "NotAMember",
           },
         ],
       },
     },
     {
-      name: "TransferSplParams",
+      name: "ProposalStatus",
       type: {
-        kind: "struct",
-        fields: [
+        kind: "enum",
+        variants: [
           {
-            name: "rawAmount",
-            type: "u64",
+            name: "Active",
           },
           {
-            name: "otpHash",
-            type: {
-              option: {
-                array: ["u8", 32],
-              },
-            },
+            name: "Approved",
           },
           {
-            name: "proofHash",
-            type: {
-              option: {
-                vec: {
-                  array: ["u8", 32],
-                },
-              },
-            },
+            name: "Executed",
           },
         ],
       },
     },
     {
-      name: "SpendingLimit",
+      name: "ProposalError",
       type: {
-        kind: "struct",
-        fields: [
+        kind: "enum",
+        variants: [
           {
-            name: "ata",
-            type: "publicKey",
+            name: "AlreadyApproved",
           },
           {
-            name: "rawAmount",
-            type: "u64",
+            name: "NotApproved",
           },
           {
-            name: "totalSpent",
-            type: "u64",
+            name: "InvalidRecipient",
+          },
+        ],
+      },
+    },
+    {
+      name: "ConfigAction",
+      type: {
+        kind: "enum",
+        variants: [
+          {
+            name: "AddMember",
+            fields: [
+              {
+                name: "newMember",
+                type: "publicKey",
+              },
+            ],
           },
           {
-            name: "lastReset",
-            type: "i64",
+            name: "RemoveMember",
+            fields: [
+              {
+                name: "oldMember",
+                type: "publicKey",
+              },
+            ],
           },
           {
-            name: "resetPeriod",
-            type: "i64",
+            name: "ChangeThreshold",
+            fields: [
+              {
+                name: "newThreshold",
+                type: "u8",
+              },
+            ],
           },
         ],
       },
@@ -1122,6 +1260,10 @@ export const IDL: HyperWalletProgram = {
     {
       code: 6007,
       name: "SpendingLimitExceeded",
+    },
+    {
+      code: 6008,
+      name: "InvalidApprover",
     },
   ],
 };

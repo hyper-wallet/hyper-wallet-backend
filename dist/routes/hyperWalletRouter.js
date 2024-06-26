@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const hyperWalletController_1 = require("../controllers/hyperWalletController");
-const otpController_1 = require("../controllers/otpController");
 const whitelistController_1 = require("../controllers/whitelistController");
 const hyperWalletRouter = express_1.default.Router();
 hyperWalletRouter.get("/", hyperWalletController_1.getHyperWalletAccount);
@@ -14,9 +13,6 @@ hyperWalletRouter.post("/tx/close-hyper-wallet", hyperWalletController_1.constru
 hyperWalletRouter.post("/tx/transfer-lamports", hyperWalletController_1.constructHyperTransferLamportsTx);
 hyperWalletRouter.post("/tx/transfer-spl", hyperWalletController_1.constructHyperTransferSplTx);
 hyperWalletRouter.post("/tx/transfer-nft", hyperWalletController_1.constructHyperTransferNftTx);
-hyperWalletRouter.post("/tx/otp/set-up", otpController_1.constructSetupOtpTx);
-hyperWalletRouter.post("/tx/otp/enable", otpController_1.constructEnableOtpTx);
-hyperWalletRouter.post("/tx/otp/disable", otpController_1.constructDisableOtpTx);
 hyperWalletRouter.post("/tx/whitelist/enable", whitelistController_1.constructEnableWhitelistTx);
 hyperWalletRouter.post("/tx/whitelist/disable", whitelistController_1.constructDisableWhitelistTx);
 hyperWalletRouter.post("/tx/whitelist/add", whitelistController_1.constructAddToWhitelistTx);

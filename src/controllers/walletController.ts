@@ -11,15 +11,15 @@ export async function getWalletTokens(req: Request, res: Response) {
   const tokenBalanceByAddressMap =
     await getWalletAssetService().getTokenBalances(address.toString());
   const tokenAddresses = Array.from(tokenBalanceByAddressMap.keys());
-  const tokenPriceByAddressMap =
-    await getTokenPriceService().getPricesByAddresses(tokenAddresses);
+  const marketDataByAddressMap =
+    await getTokenPriceService().getMarketDatasByAddresses(tokenAddresses);
 
   const tokens = tokenAddresses.map((address: string) => {
     const balance = tokenBalanceByAddressMap.get(address);
-    const price = tokenPriceByAddressMap.get(address);
+    const marketData = marketDataByAddressMap.get(address);
     return {
       ...balance,
-      price,
+      marketData,
     };
   });
 
@@ -52,7 +52,7 @@ export async function getWalletTransactions(req: Request, res: Response) {
       },
     ],
   })
-    .sort("-date")
+    .sort("-createdAt")
     .then((transactions) => {
       return res.json({ transactions });
     })
@@ -60,8 +60,7 @@ export async function getWalletTransactions(req: Request, res: Response) {
 }
 
 export async function createWalletTransaction(req: Request, res: Response) {
-  const { signature, type, fromAddress, toAddress, token, amount, value } =
-    req.body;
+  const { signature, type, fromAddress, toAddress, token, error } = req.body;
 
   const newWalletTransaction = new WalletTransactionModel({
     signature,
@@ -69,8 +68,7 @@ export async function createWalletTransaction(req: Request, res: Response) {
     fromAddress,
     toAddress,
     token,
-    amount,
-    value,
+    error,
   });
 
   newWalletTransaction

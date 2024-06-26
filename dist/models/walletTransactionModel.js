@@ -34,14 +34,18 @@ const walletTransactionSchema = new mongoose_1.default.Schema({
             type: String,
             required: true,
         },
+        amount: {
+            type: Number,
+            require: true,
+        },
+        price: {
+            type: Number,
+            require: true,
+        },
     },
-    amount: {
+    error: {
         type: String,
-        require: true,
+        requre: false,
     },
-    value: {
-        type: String,
-        require: true,
-    },
-});
+}, { timestamps: true });
 exports.WalletTransactionModel = mongoose_1.default.model("WalletTransaction", walletTransactionSchema);

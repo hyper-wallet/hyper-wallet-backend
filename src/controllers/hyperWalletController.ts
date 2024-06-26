@@ -17,6 +17,7 @@ export async function getHyperWalletAccount(req: Request, res: Response) {
     await hyperWalletProgram.account.hyperWallet.fetchNullable(
       new web3.PublicKey(address)
     );
+  console.log({ hyperWalletAccount });
   res.json({ hyperWalletAccount });
 }
 
@@ -24,12 +25,14 @@ export async function constructCreateHyperWalletTx(
   req: Request,
   res: Response
 ) {
-  const { hyperWalletPda, ownerAddress } = req.body;
+  const { hyperWalletPda, ownerAddress, approvers } = req.body;
 
   const tx = new web3.Transaction();
   tx.add(
     await hyperWalletProgram.methods
-      .createHyperWallet()
+      .createHyperWallet(
+        approvers.map((address: string) => new PublicKey(address))
+      )
       .accounts({
         hyperWallet: hyperWalletPda,
         owner: ownerAddress,
@@ -76,26 +79,22 @@ export async function constructHyperTransferLamportsTx(
   res: Response
 ) {
   const {
-    fromHyperPda,
-    hyperOwnerAddress,
+    fromHyperWalletPda,
+    hyperWalletOwnerAddress,
     toAddress,
     lamports,
-    otpHash,
-    proofHash,
+    approverAddress,
   } = req.body;
 
   const tx = new web3.Transaction();
   tx.add(
     await hyperWalletProgram.methods
-      .transferLamports({
-        lamports: new BN(lamports),
-        otpHash,
-        proofHash,
-      })
+      .transferLamports(new BN(lamports))
       .accounts({
-        fromHyperWallet: fromHyperPda,
-        hyperWalletOwner: hyperOwnerAddress,
+        hyperWallet: fromHyperWalletPda,
+        owner: hyperWalletOwnerAddress,
         to: toAddress,
+        approver: approverAddress,
       })
       .instruction()
   );
@@ -117,9 +116,8 @@ export async function constructHyperTransferSplTx(req: Request, res: Response) {
     toAddress,
     tokenMintAddress,
     rawAmount,
-    otpHash,
-    proofHash,
     feeToken,
+    approverAddress,
   } = req.body;
 
   const fromHyperWalletAta = await getOrCreateAssociatedTokenAccount(
@@ -140,23 +138,19 @@ export async function constructHyperTransferSplTx(req: Request, res: Response) {
   const tx = new web3.Transaction();
   tx.add(
     await hyperWalletProgram.methods
-      .transferSpl({
-        rawAmount: new BN(rawAmount),
-        otpHash: [...Buffer.from(otpHash.data)],
-        //@ts-ignore
-        proofHash: [...proofHash.map((v) => [...Buffer.from(v.data)])],
-      })
+      .transferSpl(new BN(rawAmount))
       .accounts({
-        fromHyperWalletAta: fromHyperWalletAta.address,
-        fromHyperWallet: fromHyperWalletPda,
-        hyperWalletOwner: hyperWalletOwnerAddress,
+        hyperWallet: fromHyperWalletPda,
+        fromAta: fromHyperWalletAta.address,
+        owner: hyperWalletOwnerAddress,
         to: toAddress,
         toAta: toAta.address,
+        approver: approverAddress,
       })
       .instruction()
   );
 
-  if (feeToken == "usdt") {
+  if (feeToken == "USDT") {
     const gasFeeSponsorUsdtAta = await gasFeeSponsor.getUsdtAta();
     const hyperWalletUsdtAta = await getOrCreateAssociatedTokenAccount(
       network.connection,
@@ -167,18 +161,14 @@ export async function constructHyperTransferSplTx(req: Request, res: Response) {
     );
     tx.add(
       await hyperWalletProgram.methods
-        .transferSpl({
-          rawAmount: new BN(0.000015 * Math.pow(10, 6)),
-          otpHash: [...Buffer.from(otpHash.data)],
-          //@ts-ignore
-          proofHash: [...proofHash.map((v) => [...Buffer.from(v.data)])],
-        })
+        .transferSpl(new BN(0.000015 * Math.pow(10, 6)))
         .accounts({
-          fromHyperWalletAta: hyperWalletUsdtAta.address,
-          fromHyperWallet: fromHyperWalletPda,
-          hyperWalletOwner: hyperWalletOwnerAddress,
+          fromAta: hyperWalletUsdtAta.address,
+          hyperWallet: fromHyperWalletPda,
+          owner: hyperWalletOwnerAddress,
           to: gasFeeSponsor.address,
           toAta: gasFeeSponsorUsdtAta.address,
+          approver: approverAddress,
         })
         .instruction()
     );
@@ -195,9 +185,8 @@ export async function constructHyperTransferNftTx(req: Request, res: Response) {
     hyperWalletOwnerAddress,
     toAddress,
     nftMintAddress,
-    otpHash,
-    proofHash,
     feeToken,
+    approverAddress,
   } = req.body;
 
   const fromHyperWalletAta = await getOrCreateAssociatedTokenAccount(
@@ -218,22 +207,19 @@ export async function constructHyperTransferNftTx(req: Request, res: Response) {
   const tx = new web3.Transaction();
   tx.add(
     await hyperWalletProgram.methods
-      .transferSpl({
-        rawAmount: new BN(TRANSFER_NFT_RAW_AMOUNT),
-        otpHash,
-        proofHash,
-      })
+      .transferSpl(new BN(TRANSFER_NFT_RAW_AMOUNT))
       .accounts({
-        fromHyperWalletAta: fromHyperWalletAta.address,
-        fromHyperWallet: fromHyperWalletPda,
-        hyperWalletOwner: hyperWalletOwnerAddress,
+        fromAta: fromHyperWalletAta.address,
+        hyperWallet: fromHyperWalletPda,
+        owner: hyperWalletOwnerAddress,
         to: toAddress,
         toAta: toAta.address,
+        approver: approverAddress,
       })
       .instruction()
   );
 
-  if (feeToken == "usdt") {
+  if (feeToken == "USDT") {
     const gasFeeSponsorUsdtAta = await gasFeeSponsor.getUsdtAta();
     const hyperWalletUsdtAta = await getOrCreateAssociatedTokenAccount(
       network.connection,
@@ -244,18 +230,14 @@ export async function constructHyperTransferNftTx(req: Request, res: Response) {
     );
     tx.add(
       await hyperWalletProgram.methods
-        .transferSpl({
-          rawAmount: new BN(0.000015 * Math.pow(10, 6)),
-          otpHash: [...Buffer.from(otpHash.data)],
-          //@ts-ignore
-          proofHash: [...proofHash.map((v) => [...Buffer.from(v.data)])],
-        })
+        .transferSpl(new BN(0.000015 * Math.pow(10, 6)))
         .accounts({
-          fromHyperWalletAta: hyperWalletUsdtAta.address,
-          fromHyperWallet: fromHyperWalletPda,
-          hyperWalletOwner: hyperWalletOwnerAddress,
+          fromAta: hyperWalletUsdtAta.address,
+          hyperWallet: fromHyperWalletPda,
+          owner: hyperWalletOwnerAddress,
           to: gasFeeSponsor.address,
           toAta: gasFeeSponsorUsdtAta.address,
+          approver: approverAddress,
         })
         .instruction()
     );

@@ -20,11 +20,11 @@ function getWalletTokens(req, res) {
         }
         const tokenBalanceByAddressMap = yield (0, services_1.getWalletAssetService)().getTokenBalances(address.toString());
         const tokenAddresses = Array.from(tokenBalanceByAddressMap.keys());
-        const tokenPriceByAddressMap = yield (0, services_1.getTokenPriceService)().getPricesByAddresses(tokenAddresses);
+        const marketDataByAddressMap = yield (0, services_1.getTokenPriceService)().getMarketDatasByAddresses(tokenAddresses);
         const tokens = tokenAddresses.map((address) => {
             const balance = tokenBalanceByAddressMap.get(address);
-            const price = tokenPriceByAddressMap.get(address);
-            return Object.assign(Object.assign({}, balance), { price });
+            const marketData = marketDataByAddressMap.get(address);
+            return Object.assign(Object.assign({}, balance), { marketData });
         });
         res.json({ tokens });
     });
@@ -57,7 +57,7 @@ function getWalletTransactions(req, res) {
                 },
             ],
         })
-            .sort("-date")
+            .sort("-createdAt")
             .then((transactions) => {
             return res.json({ transactions });
         })
@@ -67,15 +67,14 @@ function getWalletTransactions(req, res) {
 exports.getWalletTransactions = getWalletTransactions;
 function createWalletTransaction(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { signature, type, fromAddress, toAddress, token, amount, value } = req.body;
+        const { signature, type, fromAddress, toAddress, token, error } = req.body;
         const newWalletTransaction = new models_1.WalletTransactionModel({
             signature,
             type,
             fromAddress,
             toAddress,
             token,
-            amount,
-            value,
+            error,
         });
         newWalletTransaction
             .save()

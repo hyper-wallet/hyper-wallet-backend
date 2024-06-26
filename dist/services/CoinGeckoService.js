@@ -59,5 +59,37 @@ class CoinGeckoService {
             }
         });
     }
+    getMarketDatasByAddresses(addresses) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const idByAddressMap = this.createIdByAddressMap(addresses);
+            const marketDataByAddressMap = new Map();
+            try {
+                const params = {
+                    ids: Array.from(idByAddressMap.values()).join(","),
+                    vs_currency: "usd",
+                    include_market_cap: true,
+                    include_24hr_vol: true,
+                    include_24hr_change: true,
+                };
+                const res = yield this._apisauce.get("/coins/markets", params);
+                const marketDataByIdMap = new Map();
+                res.data.forEach((marketData) => {
+                    marketDataByIdMap.set(marketData.id, marketData);
+                });
+                addresses.forEach((address) => {
+                    var _a;
+                    const id = (_a = idByAddressMap.get(address)) !== null && _a !== void 0 ? _a : "";
+                    const marketData = marketDataByIdMap.get(id);
+                    marketDataByAddressMap.set(address, marketData);
+                });
+            }
+            catch (error) {
+                console.log("🚀 ~ CoinGeckoService ~ error:", error);
+            }
+            finally {
+                return marketDataByAddressMap;
+            }
+        });
+    }
 }
 exports.CoinGeckoService = CoinGeckoService;

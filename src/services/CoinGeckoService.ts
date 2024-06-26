@@ -1,5 +1,9 @@
 import { create } from "apisauce";
-import { ITokenPriceService, TokenPrice } from "./ITokenPriceService";
+import {
+  ITokenPriceService,
+  TokenMarketData,
+  TokenPrice,
+} from "./ITokenPriceService";
 
 export class CoinGeckoService implements ITokenPriceService {
   private _apisauce;
@@ -51,6 +55,36 @@ export class CoinGeckoService implements ITokenPriceService {
       console.log("🚀 ~ CoinGeckoService ~ error:", error);
     } finally {
       return tokenPriceByAddressMap;
+    }
+  }
+
+  async getMarketDatasByAddresses(
+    addresses: string[]
+  ): Promise<Map<string, TokenMarketData>> {
+    const idByAddressMap = this.createIdByAddressMap(addresses);
+    const marketDataByAddressMap = new Map<string, TokenMarketData>();
+    try {
+      const params = {
+        ids: Array.from(idByAddressMap.values()).join(","),
+        vs_currency: "usd",
+        include_market_cap: true,
+        include_24hr_vol: true,
+        include_24hr_change: true,
+      };
+      const res = await this._apisauce.get("/coins/markets", params);
+      const marketDataByIdMap = new Map<string, TokenMarketData>();
+      (res.data as any[]).forEach((marketData: any) => {
+        marketDataByIdMap.set(marketData.id, marketData);
+      });
+      addresses.forEach((address) => {
+        const id = idByAddressMap.get(address) ?? "";
+        const marketData = marketDataByIdMap.get(id) as TokenMarketData;
+        marketDataByAddressMap.set(address, marketData);
+      });
+    } catch (error) {
+      console.log("🚀 ~ CoinGeckoService ~ error:", error);
+    } finally {
+      return marketDataByAddressMap;
     }
   }
 }

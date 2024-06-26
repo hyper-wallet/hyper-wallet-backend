@@ -23,16 +23,17 @@ function getHyperWalletAccount(req, res) {
             return res.json({ error: "address is required" });
         }
         const hyperWalletAccount = yield hyper_wallet_program_1.hyperWalletProgram.account.hyperWallet.fetchNullable(new anchor_1.web3.PublicKey(address));
+        console.log({ hyperWalletAccount });
         res.json({ hyperWalletAccount });
     });
 }
 exports.getHyperWalletAccount = getHyperWalletAccount;
 function constructCreateHyperWalletTx(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { hyperWalletPda, ownerAddress } = req.body;
+        const { hyperWalletPda, ownerAddress, approvers } = req.body;
         const tx = new anchor_1.web3.Transaction();
         tx.add(yield hyper_wallet_program_1.hyperWalletProgram.methods
-            .createHyperWallet()
+            .createHyperWallet(approvers.map((address) => new web3_js_1.PublicKey(address)))
             .accounts({
             hyperWallet: hyperWalletPda,
             owner: ownerAddress,
@@ -75,18 +76,15 @@ function constructCloseHyperWalletTx(req, res) {
 exports.constructCloseHyperWalletTx = constructCloseHyperWalletTx;
 function constructHyperTransferLamportsTx(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { fromHyperPda, hyperOwnerAddress, toAddress, lamports, otpHash, proofHash, } = req.body;
+        const { fromHyperWalletPda, hyperWalletOwnerAddress, toAddress, lamports, approverAddress, } = req.body;
         const tx = new anchor_1.web3.Transaction();
         tx.add(yield hyper_wallet_program_1.hyperWalletProgram.methods
-            .transferLamports({
-            lamports: new anchor_1.BN(lamports),
-            otpHash,
-            proofHash,
-        })
+            .transferLamports(new anchor_1.BN(lamports))
             .accounts({
-            fromHyperWallet: fromHyperPda,
-            hyperWalletOwner: hyperOwnerAddress,
+            hyperWallet: fromHyperWalletPda,
+            owner: hyperWalletOwnerAddress,
             to: toAddress,
+            approver: approverAddress,
         })
             .instruction());
         tx.feePayer = services_1.gasFeeSponsor.address;
@@ -103,41 +101,33 @@ function constructHyperTransferLamportsTx(req, res) {
 exports.constructHyperTransferLamportsTx = constructHyperTransferLamportsTx;
 function constructHyperTransferSplTx(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { fromHyperWalletPda, hyperWalletOwnerAddress, toAddress, tokenMintAddress, rawAmount, otpHash, proofHash, feeToken, } = req.body;
+        const { fromHyperWalletPda, hyperWalletOwnerAddress, toAddress, tokenMintAddress, rawAmount, feeToken, approverAddress, } = req.body;
         const fromHyperWalletAta = yield (0, spl_token_1.getOrCreateAssociatedTokenAccount)(services_1.network.connection, services_1.gasFeeSponsor.signer, new web3_js_1.PublicKey(tokenMintAddress), new web3_js_1.PublicKey(fromHyperWalletPda), true);
         const toAta = yield (0, spl_token_1.getOrCreateAssociatedTokenAccount)(services_1.network.connection, services_1.gasFeeSponsor.signer, new web3_js_1.PublicKey(tokenMintAddress), new web3_js_1.PublicKey(toAddress), true);
         const tx = new anchor_1.web3.Transaction();
         tx.add(yield hyper_wallet_program_1.hyperWalletProgram.methods
-            .transferSpl({
-            rawAmount: new anchor_1.BN(rawAmount),
-            otpHash: [...Buffer.from(otpHash.data)],
-            //@ts-ignore
-            proofHash: [...proofHash.map((v) => [...Buffer.from(v.data)])],
-        })
+            .transferSpl(new anchor_1.BN(rawAmount))
             .accounts({
-            fromHyperWalletAta: fromHyperWalletAta.address,
-            fromHyperWallet: fromHyperWalletPda,
-            hyperWalletOwner: hyperWalletOwnerAddress,
+            hyperWallet: fromHyperWalletPda,
+            fromAta: fromHyperWalletAta.address,
+            owner: hyperWalletOwnerAddress,
             to: toAddress,
             toAta: toAta.address,
+            approver: approverAddress,
         })
             .instruction());
-        if (feeToken == "usdt") {
+        if (feeToken == "USDT") {
             const gasFeeSponsorUsdtAta = yield services_1.gasFeeSponsor.getUsdtAta();
             const hyperWalletUsdtAta = yield (0, spl_token_1.getOrCreateAssociatedTokenAccount)(services_1.network.connection, services_1.gasFeeSponsor.signer, new web3_js_1.PublicKey(USDT_MINT_ADDRESS), new web3_js_1.PublicKey(fromHyperWalletPda), true);
             tx.add(yield hyper_wallet_program_1.hyperWalletProgram.methods
-                .transferSpl({
-                rawAmount: new anchor_1.BN(0.000015 * Math.pow(10, 6)),
-                otpHash: [...Buffer.from(otpHash.data)],
-                //@ts-ignore
-                proofHash: [...proofHash.map((v) => [...Buffer.from(v.data)])],
-            })
+                .transferSpl(new anchor_1.BN(0.000015 * Math.pow(10, 6)))
                 .accounts({
-                fromHyperWalletAta: hyperWalletUsdtAta.address,
-                fromHyperWallet: fromHyperWalletPda,
-                hyperWalletOwner: hyperWalletOwnerAddress,
+                fromAta: hyperWalletUsdtAta.address,
+                hyperWallet: fromHyperWalletPda,
+                owner: hyperWalletOwnerAddress,
                 to: services_1.gasFeeSponsor.address,
                 toAta: gasFeeSponsorUsdtAta.address,
+                approver: approverAddress,
             })
                 .instruction());
         }
@@ -149,40 +139,33 @@ exports.constructHyperTransferSplTx = constructHyperTransferSplTx;
 function constructHyperTransferNftTx(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const TRANSFER_NFT_RAW_AMOUNT = 1; // There's only 1 nft per mint address
-        const { fromHyperWalletPda, hyperWalletOwnerAddress, toAddress, nftMintAddress, otpHash, proofHash, feeToken, } = req.body;
+        const { fromHyperWalletPda, hyperWalletOwnerAddress, toAddress, nftMintAddress, feeToken, approverAddress, } = req.body;
         const fromHyperWalletAta = yield (0, spl_token_1.getOrCreateAssociatedTokenAccount)(services_1.network.connection, services_1.gasFeeSponsor.signer, new web3_js_1.PublicKey(nftMintAddress), new web3_js_1.PublicKey(fromHyperWalletPda), true);
         const toAta = yield (0, spl_token_1.getOrCreateAssociatedTokenAccount)(services_1.network.connection, services_1.gasFeeSponsor.signer, new web3_js_1.PublicKey(nftMintAddress), new web3_js_1.PublicKey(toAddress), true);
         const tx = new anchor_1.web3.Transaction();
         tx.add(yield hyper_wallet_program_1.hyperWalletProgram.methods
-            .transferSpl({
-            rawAmount: new anchor_1.BN(TRANSFER_NFT_RAW_AMOUNT),
-            otpHash,
-            proofHash,
-        })
+            .transferSpl(new anchor_1.BN(TRANSFER_NFT_RAW_AMOUNT))
             .accounts({
-            fromHyperWalletAta: fromHyperWalletAta.address,
-            fromHyperWallet: fromHyperWalletPda,
-            hyperWalletOwner: hyperWalletOwnerAddress,
+            fromAta: fromHyperWalletAta.address,
+            hyperWallet: fromHyperWalletPda,
+            owner: hyperWalletOwnerAddress,
             to: toAddress,
             toAta: toAta.address,
+            approver: approverAddress,
         })
             .instruction());
-        if (feeToken == "usdt") {
+        if (feeToken == "USDT") {
             const gasFeeSponsorUsdtAta = yield services_1.gasFeeSponsor.getUsdtAta();
             const hyperWalletUsdtAta = yield (0, spl_token_1.getOrCreateAssociatedTokenAccount)(services_1.network.connection, services_1.gasFeeSponsor.signer, new web3_js_1.PublicKey(USDT_MINT_ADDRESS), new web3_js_1.PublicKey(fromHyperWalletPda), true);
             tx.add(yield hyper_wallet_program_1.hyperWalletProgram.methods
-                .transferSpl({
-                rawAmount: new anchor_1.BN(0.000015 * Math.pow(10, 6)),
-                otpHash: [...Buffer.from(otpHash.data)],
-                //@ts-ignore
-                proofHash: [...proofHash.map((v) => [...Buffer.from(v.data)])],
-            })
+                .transferSpl(new anchor_1.BN(0.000015 * Math.pow(10, 6)))
                 .accounts({
-                fromHyperWalletAta: hyperWalletUsdtAta.address,
-                fromHyperWallet: fromHyperWalletPda,
-                hyperWalletOwner: hyperWalletOwnerAddress,
+                fromAta: hyperWalletUsdtAta.address,
+                hyperWallet: fromHyperWalletPda,
+                owner: hyperWalletOwnerAddress,
                 to: services_1.gasFeeSponsor.address,
                 toAta: gasFeeSponsorUsdtAta.address,
+                approver: approverAddress,
             })
                 .instruction());
         }

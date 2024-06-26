@@ -26,7 +26,14 @@
                     "isSigner": false
                 }
             ],
-            "args": []
+            "args": [
+                {
+                    "name": "approvers",
+                    "type": {
+                        "vec": "publicKey"
+                    }
+                }
+            ]
         },
         {
             "name": "closeHyperWallet",
@@ -53,7 +60,7 @@
             "name": "transferLamports",
             "accounts": [
                 {
-                    "name": "fromHyperWallet",
+                    "name": "hyperWallet",
                     "isMut": true,
                     "isSigner": false
                 },
@@ -63,7 +70,12 @@
                     "isSigner": false
                 },
                 {
-                    "name": "hyperWalletOwner",
+                    "name": "owner",
+                    "isMut": false,
+                    "isSigner": true
+                },
+                {
+                    "name": "approver",
                     "isMut": false,
                     "isSigner": true
                 },
@@ -75,10 +87,8 @@
             ],
             "args": [
                 {
-                    "name": "params",
-                    "type": {
-                        "defined": "TransferLamportsParams"
-                    }
+                    "name": "lamports",
+                    "type": "u64"
                 }
             ]
         },
@@ -86,12 +96,12 @@
             "name": "transferSpl",
             "accounts": [
                 {
-                    "name": "fromHyperWallet",
+                    "name": "hyperWallet",
                     "isMut": true,
                     "isSigner": false
                 },
                 {
-                    "name": "fromHyperWalletAta",
+                    "name": "fromAta",
                     "isMut": true,
                     "isSigner": false
                 },
@@ -106,213 +116,17 @@
                     "isSigner": false
                 },
                 {
-                    "name": "hyperWalletOwner",
+                    "name": "owner",
+                    "isMut": false,
+                    "isSigner": true
+                },
+                {
+                    "name": "approver",
                     "isMut": false,
                     "isSigner": true
                 },
                 {
                     "name": "tokenProgram",
-                    "isMut": false,
-                    "isSigner": false
-                }
-            ],
-            "args": [
-                {
-                    "name": "params",
-                    "type": {
-                        "defined": "TransferSplParams"
-                    }
-                }
-            ]
-        },
-        {
-            "name": "enableWhitelist",
-            "accounts": [
-                {
-                    "name": "hyperWallet",
-                    "isMut": true,
-                    "isSigner": false
-                },
-                {
-                    "name": "hyperWalletOwner",
-                    "isMut": false,
-                    "isSigner": true
-                }
-            ],
-            "args": []
-        },
-        {
-            "name": "disableWhitelist",
-            "accounts": [
-                {
-                    "name": "hyperWallet",
-                    "isMut": true,
-                    "isSigner": false
-                },
-                {
-                    "name": "hyperWalletOwner",
-                    "isMut": false,
-                    "isSigner": true
-                }
-            ],
-            "args": []
-        },
-        {
-            "name": "addToWhitelist",
-            "accounts": [
-                {
-                    "name": "hyperWallet",
-                    "isMut": true,
-                    "isSigner": false
-                },
-                {
-                    "name": "hyperWalletOwner",
-                    "isMut": false,
-                    "isSigner": true
-                }
-            ],
-            "args": [
-                {
-                    "name": "address",
-                    "type": "publicKey"
-                }
-            ]
-        },
-        {
-            "name": "removeFromWhitelist",
-            "accounts": [
-                {
-                    "name": "hyperWallet",
-                    "isMut": true,
-                    "isSigner": false
-                },
-                {
-                    "name": "hyperWalletOwner",
-                    "isMut": false,
-                    "isSigner": true
-                }
-            ],
-            "args": [
-                {
-                    "name": "address",
-                    "type": "publicKey"
-                }
-            ]
-        },
-        {
-            "name": "verifyReceiver",
-            "accounts": [
-                {
-                    "name": "hyperWallet",
-                    "isMut": false,
-                    "isSigner": false
-                },
-                {
-                    "name": "hyperWalletOwner",
-                    "isMut": false,
-                    "isSigner": true
-                }
-            ],
-            "args": [
-                {
-                    "name": "address",
-                    "type": "publicKey"
-                }
-            ]
-        },
-        {
-            "name": "enableOtp",
-            "accounts": [
-                {
-                    "name": "hyperWallet",
-                    "isMut": true,
-                    "isSigner": false
-                },
-                {
-                    "name": "hyperWalletOwner",
-                    "isMut": false,
-                    "isSigner": true
-                }
-            ],
-            "args": []
-        },
-        {
-            "name": "disableOtp",
-            "accounts": [
-                {
-                    "name": "hyperWallet",
-                    "isMut": true,
-                    "isSigner": false
-                },
-                {
-                    "name": "hyperWalletOwner",
-                    "isMut": false,
-                    "isSigner": true
-                }
-            ],
-            "args": []
-        },
-        {
-            "name": "setUpOtp",
-            "accounts": [
-                {
-                    "name": "hyperWallet",
-                    "isMut": true,
-                    "isSigner": false
-                },
-                {
-                    "name": "hyperWalletOwner",
-                    "isMut": false,
-                    "isSigner": true
-                }
-            ],
-            "args": [
-                {
-                    "name": "setUpOtpParams",
-                    "type": {
-                        "defined": "SetUpOtpParams"
-                    }
-                }
-            ]
-        },
-        {
-            "name": "verifyOtp",
-            "accounts": [
-                {
-                    "name": "hyperWallet",
-                    "isMut": true,
-                    "isSigner": false
-                },
-                {
-                    "name": "hyperWalletOwner",
-                    "isMut": false,
-                    "isSigner": true
-                }
-            ],
-            "args": [
-                {
-                    "name": "verifyOtpParams",
-                    "type": {
-                        "defined": "VerifyOtpParams"
-                    }
-                }
-            ]
-        },
-        {
-            "name": "setSpendingLimitSpl",
-            "accounts": [
-                {
-                    "name": "hyperWallet",
-                    "isMut": true,
-                    "isSigner": false
-                },
-                {
-                    "name": "hyperWalletOwner",
-                    "isMut": false,
-                    "isSigner": true
-                },
-                {
-                    "name": "ata",
                     "isMut": false,
                     "isSigner": false
                 }
@@ -325,20 +139,197 @@
             ]
         },
         {
-            "name": "removeSpendingLimitSpl",
+            "name": "createTransferLamportsProposal",
             "accounts": [
                 {
-                    "name": "hyperWallet",
-                    "isMut": true,
+                    "name": "hyperBusinessWallet",
+                    "isMut": false,
                     "isSigner": false
                 },
                 {
-                    "name": "hyperWalletOwner",
+                    "name": "proposal",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "rentPayer",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "owner",
                     "isMut": false,
                     "isSigner": true
                 },
                 {
-                    "name": "ata",
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "to",
+                    "type": "publicKey"
+                },
+                {
+                    "name": "lamports",
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "approveTransferLamportsProposal",
+            "accounts": [
+                {
+                    "name": "hyperBusinessWallet",
+                    "isMut": false,
+                    "isSigner": false
+                },
+                {
+                    "name": "proposal",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "voter",
+                    "isMut": false,
+                    "isSigner": true
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "executeTransferLamportsProposal",
+            "accounts": [
+                {
+                    "name": "hyperBusinessWallet",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "proposal",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "to",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "createTransferSplProposal",
+            "accounts": [
+                {
+                    "name": "hyperBusinessWallet",
+                    "isMut": false,
+                    "isSigner": false
+                },
+                {
+                    "name": "proposal",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "rentPayer",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "owner",
+                    "isMut": false,
+                    "isSigner": true
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "fromAta",
+                    "type": "publicKey"
+                },
+                {
+                    "name": "toAta",
+                    "type": "publicKey"
+                },
+                {
+                    "name": "rawAmount",
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "approveTransferSplProposal",
+            "accounts": [
+                {
+                    "name": "hyperBusinessWallet",
+                    "isMut": false,
+                    "isSigner": false
+                },
+                {
+                    "name": "proposal",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "voter",
+                    "isMut": false,
+                    "isSigner": true
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "executeTransferSplProposal",
+            "accounts": [
+                {
+                    "name": "hyperBusinessWallet",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "proposal",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "fromAta",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "toAta",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "owner",
+                    "isMut": false,
+                    "isSigner": true
+                },
+                {
+                    "name": "tokenProgram",
                     "isMut": false,
                     "isSigner": false
                 }
@@ -347,6 +338,32 @@
         }
     ],
     "accounts": [
+        {
+            "name": "HyperBusinessWallet",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "creator",
+                        "type": "publicKey"
+                    },
+                    {
+                        "name": "members",
+                        "type": {
+                            "vec": "publicKey"
+                        }
+                    },
+                    {
+                        "name": "threshold",
+                        "type": "u8"
+                    },
+                    {
+                        "name": "bump",
+                        "type": "u8"
+                    }
+                ]
+            }
+        },
         {
             "name": "HyperWallet",
             "type": {
@@ -357,38 +374,108 @@
                         "type": "publicKey"
                     },
                     {
-                        "name": "whitelistEnabled",
-                        "type": "bool"
+                        "name": "approvers",
+                        "type": {
+                            "vec": "publicKey"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "TransferLamportProposal",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "hyperBusinessWallet",
+                        "type": "publicKey"
                     },
                     {
-                        "name": "whitelistedAddresses",
+                        "name": "approved",
                         "type": {
                             "vec": "publicKey"
                         }
                     },
                     {
-                        "name": "otpEnabled",
-                        "type": "bool"
-                    },
-                    {
-                        "name": "otpRoot",
+                        "name": "status",
                         "type": {
-                            "array": ["u8", 32]
+                            "defined": "ProposalStatus"
                         }
                     },
                     {
-                        "name": "otpInitTime",
-                        "type": "u32"
+                        "name": "to",
+                        "type": "publicKey"
                     },
                     {
-                        "name": "spendingLimitEnabled",
-                        "type": "bool"
+                        "name": "lamports",
+                        "type": "u64"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "TransferSPLProposal",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "hyperBusinessWallet",
+                        "type": "publicKey"
                     },
                     {
-                        "name": "spendingLimits",
+                        "name": "approved",
+                        "type": {
+                            "vec": "publicKey"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "type": {
+                            "defined": "ProposalStatus"
+                        }
+                    },
+                    {
+                        "name": "fromAta",
+                        "type": "publicKey"
+                    },
+                    {
+                        "name": "toAta",
+                        "type": "publicKey"
+                    },
+                    {
+                        "name": "rawAmount",
+                        "type": "u64"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "ConfigProposal",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "hyperBusinessWallet",
+                        "type": "publicKey"
+                    },
+                    {
+                        "name": "approved",
+                        "type": {
+                            "vec": "publicKey"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "type": {
+                            "defined": "ProposalStatus"
+                        }
+                    },
+                    {
+                        "name": "actions",
                         "type": {
                             "vec": {
-                                "defined": "SpendingLimit"
+                                "defined": "ConfigAction"
                             }
                         }
                     }
@@ -398,39 +485,15 @@
     ],
     "types": [
         {
-            "name": "SetUpOtpParams",
+            "name": "CreateConfigProposalArgs",
             "type": {
                 "kind": "struct",
                 "fields": [
                     {
-                        "name": "initTime",
-                        "type": "u32"
-                    },
-                    {
-                        "name": "root",
-                        "type": {
-                            "array": ["u8", 32]
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "name": "VerifyOtpParams",
-            "type": {
-                "kind": "struct",
-                "fields": [
-                    {
-                        "name": "otpHash",
-                        "type": {
-                            "array": ["u8", 32]
-                        }
-                    },
-                    {
-                        "name": "proofHash",
+                        "name": "actions",
                         "type": {
                             "vec": {
-                                "array": ["u8", 32]
+                                "defined": "ConfigAction"
                             }
                         }
                     }
@@ -445,82 +508,86 @@
                     {
                         "name": "lamports",
                         "type": "u64"
-                    },
-                    {
-                        "name": "otpHash",
-                        "type": {
-                            "option": {
-                                "array": ["u8", 32]
-                            }
-                        }
-                    },
-                    {
-                        "name": "proofHash",
-                        "type": {
-                            "option": {
-                                "vec": {
-                                    "array": ["u8", 32]
-                                }
-                            }
-                        }
                     }
                 ]
             }
         },
         {
-            "name": "TransferSplParams",
+            "name": "HyperBusinessWalletError",
             "type": {
-                "kind": "struct",
-                "fields": [
+                "kind": "enum",
+                "variants": [
                     {
-                        "name": "rawAmount",
-                        "type": "u64"
-                    },
-                    {
-                        "name": "otpHash",
-                        "type": {
-                            "option": {
-                                "array": ["u8", 32]
-                            }
-                        }
-                    },
-                    {
-                        "name": "proofHash",
-                        "type": {
-                            "option": {
-                                "vec": {
-                                    "array": ["u8", 32]
-                                }
-                            }
-                        }
+                        "name": "NotAMember"
                     }
                 ]
             }
         },
         {
-            "name": "SpendingLimit",
+            "name": "ProposalStatus",
             "type": {
-                "kind": "struct",
-                "fields": [
+                "kind": "enum",
+                "variants": [
                     {
-                        "name": "ata",
-                        "type": "publicKey"
+                        "name": "Active"
                     },
                     {
-                        "name": "rawAmount",
-                        "type": "u64"
+                        "name": "Approved"
                     },
                     {
-                        "name": "totalSpent",
-                        "type": "u64"
+                        "name": "Executed"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "ProposalError",
+            "type": {
+                "kind": "enum",
+                "variants": [
+                    {
+                        "name": "AlreadyApproved"
                     },
                     {
-                        "name": "lastReset",
-                        "type": "i64"
+                        "name": "NotApproved"
                     },
                     {
-                        "name": "resetPeriod",
-                        "type": "i64"
+                        "name": "InvalidRecipient"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "ConfigAction",
+            "type": {
+                "kind": "enum",
+                "variants": [
+                    {
+                        "name": "AddMember",
+                        "fields": [
+                            {
+                                "name": "newMember",
+                                "type": "publicKey"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "RemoveMember",
+                        "fields": [
+                            {
+                                "name": "oldMember",
+                                "type": "publicKey"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "ChangeThreshold",
+                        "fields": [
+                            {
+                                "name": "newThreshold",
+                                "type": "u8"
+                            }
+                        ]
                     }
                 ]
             }
@@ -558,9 +625,13 @@
         {
             "code": 6007,
             "name": "SpendingLimitExceeded"
+        },
+        {
+            "code": 6008,
+            "name": "InvalidApprover"
         }
     ],
     "metadata": {
-        "address": "HYPERhd7VFrTzbRLyGsRcGQZkSfaKUGKAY8XDbaY5AgL"
+        "address": "HWPtsy7nbqCiszLppXDqizw7w5CQVLhvHY7j9mCnA63R"
     }
 }
