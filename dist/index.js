@@ -21,14 +21,13 @@ const solanaWalletRouter_1 = __importDefault(require("./routes/solanaWalletRoute
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT;
-console.log("🚀 ~ port:", port);
 // Set up mongoose connection
 const mongoose_1 = __importDefault(require("mongoose"));
 mongoose_1.default.set("strictQuery", false);
 connectDb().catch((err) => console.log(err));
 function connectDb() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield mongoose_1.default.connect("mongodb+srv://nguyenhaiduc06:4KFkYosoDQf4YyGP@cluster0.w7nf7aq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+        yield mongoose_1.default.connect(process.env.MONGODB_URI);
     });
 }
 app.use((0, cors_1.default)({
