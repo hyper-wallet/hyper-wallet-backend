@@ -370,6 +370,120 @@ exports.IDL = {
             ],
             args: [],
         },
+        {
+            name: "enableWhitelist",
+            accounts: [
+                {
+                    name: "hyperWallet",
+                    isMut: true,
+                    isSigner: false,
+                },
+                {
+                    name: "owner",
+                    isMut: false,
+                    isSigner: true,
+                },
+                {
+                    name: "approver",
+                    isMut: false,
+                    isSigner: true,
+                },
+                {
+                    name: "systemProgram",
+                    isMut: false,
+                    isSigner: false,
+                },
+            ],
+            args: [],
+        },
+        {
+            name: "disableWhitelist",
+            accounts: [
+                {
+                    name: "hyperWallet",
+                    isMut: true,
+                    isSigner: false,
+                },
+                {
+                    name: "owner",
+                    isMut: false,
+                    isSigner: true,
+                },
+                {
+                    name: "approver",
+                    isMut: false,
+                    isSigner: true,
+                },
+                {
+                    name: "systemProgram",
+                    isMut: false,
+                    isSigner: false,
+                },
+            ],
+            args: [],
+        },
+        {
+            name: "addToWhitelist",
+            accounts: [
+                {
+                    name: "hyperWallet",
+                    isMut: true,
+                    isSigner: false,
+                },
+                {
+                    name: "owner",
+                    isMut: false,
+                    isSigner: true,
+                },
+                {
+                    name: "approver",
+                    isMut: false,
+                    isSigner: true,
+                },
+                {
+                    name: "systemProgram",
+                    isMut: false,
+                    isSigner: false,
+                },
+            ],
+            args: [
+                {
+                    name: "address",
+                    type: "publicKey",
+                },
+            ],
+        },
+        {
+            name: "removeFromWhitelist",
+            accounts: [
+                {
+                    name: "hyperWallet",
+                    isMut: true,
+                    isSigner: false,
+                },
+                {
+                    name: "owner",
+                    isMut: false,
+                    isSigner: true,
+                },
+                {
+                    name: "approver",
+                    isMut: false,
+                    isSigner: true,
+                },
+                {
+                    name: "systemProgram",
+                    isMut: false,
+                    isSigner: false,
+                },
+            ],
+            args: [
+                {
+                    name: "address",
+                    type: "publicKey",
+                },
+            ],
+        },
     ],
     accounts: [
         {
@@ -409,6 +523,16 @@ exports.IDL = {
                     },
                     {
                         name: "approvers",
+                        type: {
+                            vec: "publicKey",
+                        },
+                    },
+                    {
+                        name: "whitelistEnabled",
+                        type: "bool",
+                    },
+                    {
+                        name: "whitelistedAddresses",
                         type: {
                             vec: "publicKey",
                         },

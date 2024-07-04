@@ -10,65 +10,70 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.constructRemoveFromWhitelistTx = exports.constructAddToWhitelistTx = exports.constructDisableWhitelistTx = exports.constructEnableWhitelistTx = void 0;
+const hyper_wallet_program_1 = require("../lib/hyper-wallet-program");
+const anchor_1 = require("@coral-xyz/anchor");
+const services_1 = require("../services");
 function constructEnableWhitelistTx(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        // const { hyperWalletPda, hyperWalletOwnerAddress } = req.body;
-        // const tx = await hyperWalletProgram.methods
-        //   .enableWhitelist()
-        //   .accounts({
-        //     hyperWallet: hyperWalletPda,
-        //     hyperWalletOwner: hyperWalletOwnerAddress,
-        //   })
-        //   .transaction();
-        // const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(tx);
-        // res.json({ base64tx });
+        const { hyperWalletPda, hyperWalletOwnerAddress, approverAddress } = req.body;
+        const tx = yield hyper_wallet_program_1.hyperWalletProgram.methods
+            .enableWhitelist()
+            .accounts({
+            hyperWallet: hyperWalletPda,
+            owner: hyperWalletOwnerAddress,
+            approver: approverAddress,
+        })
+            .transaction();
+        const { base64tx } = yield services_1.gasFeeSponsor.createFullySponsoredTx(tx);
+        res.json({ base64tx });
     });
 }
 exports.constructEnableWhitelistTx = constructEnableWhitelistTx;
 function constructDisableWhitelistTx(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        // const { hyperWalletPda, hyperWalletOwnerAddress } = req.body;
-        // const tx = await hyperWalletProgram.methods
-        //   .disableWhitelist()
-        //   .accounts({
-        //     hyperWallet: hyperWalletPda,
-        //     hyperWalletOwner: hyperWalletOwnerAddress,
-        //   })
-        //   .transaction();
-        // const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(tx);
-        // res.json({ base64tx });
+        const { hyperWalletPda, hyperWalletOwnerAddress, approverAddress } = req.body;
+        const tx = yield hyper_wallet_program_1.hyperWalletProgram.methods
+            .disableWhitelist()
+            .accounts({
+            hyperWallet: hyperWalletPda,
+            owner: hyperWalletOwnerAddress,
+            approver: approverAddress,
+        })
+            .transaction();
+        const { base64tx } = yield services_1.gasFeeSponsor.createFullySponsoredTx(tx);
+        res.json({ base64tx });
     });
 }
 exports.constructDisableWhitelistTx = constructDisableWhitelistTx;
 function constructAddToWhitelistTx(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        // const { hyperWalletPda, hyperWalletOwnerAddress, addressToBeAdded } =
-        //   req.body;
-        // const tx = await hyperWalletProgram.methods
-        //   .addToWhitelist(new web3.PublicKey(addressToBeAdded))
-        //   .accounts({
-        //     hyperWallet: hyperWalletPda,
-        //     hyperWalletOwner: hyperWalletOwnerAddress,
-        //   })
-        //   .transaction();
-        // const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(tx);
-        // res.json({ base64tx });
+        const { hyperWalletPda, hyperWalletOwnerAddress, addressToBeAdded, approverAddress, } = req.body;
+        const tx = yield hyper_wallet_program_1.hyperWalletProgram.methods
+            .addToWhitelist(new anchor_1.web3.PublicKey(addressToBeAdded))
+            .accounts({
+            hyperWallet: hyperWalletPda,
+            owner: hyperWalletOwnerAddress,
+            approver: approverAddress,
+        })
+            .transaction();
+        const { base64tx } = yield services_1.gasFeeSponsor.createFullySponsoredTx(tx);
+        res.json({ base64tx });
     });
 }
 exports.constructAddToWhitelistTx = constructAddToWhitelistTx;
 function constructRemoveFromWhitelistTx(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        // const { hyperWalletPda, hyperWalletOwnerAddress, addressToBeRemoved } =
-        //   req.body;
-        // const tx = await hyperWalletProgram.methods
-        //   .removeFromWhitelist(new web3.PublicKey(addressToBeRemoved))
-        //   .accounts({
-        //     hyperWallet: hyperWalletPda,
-        //     hyperWalletOwner: hyperWalletOwnerAddress,
-        //   })
-        //   .transaction();
-        // const { base64tx } = await gasFeeSponsor.createFullySponsoredTx(tx);
-        // res.json({ base64tx });
+        const { hyperWalletPda, hyperWalletOwnerAddress, addressToBeRemoved, approverAddress, } = req.body;
+        const tx = yield hyper_wallet_program_1.hyperWalletProgram.methods
+            .removeFromWhitelist(new anchor_1.web3.PublicKey(addressToBeRemoved))
+            .accounts({
+            hyperWallet: hyperWalletPda,
+            owner: hyperWalletOwnerAddress,
+            approver: approverAddress,
+        })
+            .transaction();
+        const { base64tx } = yield services_1.gasFeeSponsor.createFullySponsoredTx(tx);
+        res.json({ base64tx });
     });
 }
 exports.constructRemoveFromWhitelistTx = constructRemoveFromWhitelistTx;
